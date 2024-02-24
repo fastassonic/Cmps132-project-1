@@ -20,7 +20,7 @@ class student(human):
     def setDOB(self,newdob):
         self.__dob=newdob
     def AddCourse(self,course):
-        self.__courses[str(course.getClassID())] = StudentCourse(course.getClassName(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID,course.getSemesterName(),course.getStudentList(),100)
+        self.__courses[str(course.getClassID())] = StudentCourse(course.get_name(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID,course.getSemesterName(),course.getStudentList(),100)
     def DropCourse(self,course):
         if str(course.getClassID()) in self.__courses.keys():
             del self.__courses[course.getClassID()]

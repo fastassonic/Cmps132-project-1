@@ -28,7 +28,7 @@ class instructor(human):
         coursestring = ""
         for key in self.__Courses:
             
-            coursestring += f"  {copyofcourselist[key].getClassName()}\n   id: {copyofcourselist[key].getClassID()} \n   instructor: {copyofcourselist[key].getInstructor()} \n   location: {copyofcourselist[key].getLocation()} \n   semesterid: {copyofcourselist[key].getSemesterID()}\n   semestername: {copyofcourselist[key].getSemesterName()} \n"
+            coursestring += f"  {copyofcourselist[key].get_name()}\n   id: {copyofcourselist[key].getClassID()} \n   instructor: {copyofcourselist[key].getInstructor()} \n   location: {copyofcourselist[key].getLocation()} \n   semesterid: {copyofcourselist[key].getSemesterID()}\n   semestername: {copyofcourselist[key].getSemesterName()} \n"
         if coursestring == "":
             coursestring = "  [Teaching no classes]"
         return "Instructor\n"+ super().displayinfo() + f"\nMajor: {self.__Degree}\n Courses\n" + coursestring

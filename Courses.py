@@ -9,7 +9,8 @@ class Courses:
         self._studentList=studentList
     def getClassID(self):
         return self._id
-    def getClassName(self):
+    #changed for the purpose of dict selector
+    def get_name(self):
         return self._name
     def getInstructor(self):
         return self._instructor

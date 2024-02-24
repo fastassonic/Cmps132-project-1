@@ -19,6 +19,10 @@ def add_student(name,email,contact,major,dob,courses = {}):
     else:
         key = "1"
     Studentdict[key] = student(key,name,email,contact,major,dob,courses)
+    return key
+
+def remove_student(id):
+    del Studentdict[id]
 def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     if instructor != "undefined": 
         try:
@@ -36,7 +40,15 @@ def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     coursesdict[key] = Courses(key,name,instructorid,location,semesterID,semesterName,studentList)
     if instructorid != "":
         Instructordict[instructorid].AddCourse(coursesdict[key])
-
+def dict_selector(tempdict):
+    for i in tempdict.keys():
+        print(f"{i}:{tempdict[i].get_name()}")
+    temp = input("please select one of the options")
+    if temp in tempdict.keys():
+        return temp
+    else:
+        return dict_selector(tempdict)
+    
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
     Instructordict[course.getInstructor()].DropCourse(course)
@@ -95,10 +107,26 @@ def studentmenu():
           4. View student
           5. Back 
           """)
-    
+    temp = input("Please select out of the possible options")
+    if temp in ["1","2","3","4",""]:
+        if temp == "1":
+            #putting the args here to make it easier to write
+            #name,email,contact,major,dob
+            tempid = add_student(input("Student name?: "),input("Student Email?: "),"Student contact?: ",input("Student's major?: "),input("Student's DOB?: "))
+            print(Studentdict[tempid].displayinfo())
+        if temp == "2":
+            if len(Studentdict) > 1:
+                tempid = dict_selector(Studentdict)
+                remove_student(tempid)
+            else:
+                print("Number of students would be reduced to 0 during this operation. Please create a new student before destroying the last one ")
+        
+        
 
+def studenteditmenu(editingid=""):
+    if editingid == "":
+        editingid = dict_selector(Studentdict)
 def instructorsmenu():
-
     print("""
           Instructor submenu
           1. Add instructor 
@@ -107,6 +135,9 @@ def instructorsmenu():
           4. View Instructor 
           5. Back
           """)
+    temp = input("Please select out of the possible options")
+    
+    
 
 def classesmenu():
     print("""
@@ -118,6 +149,7 @@ def classesmenu():
           5. Back 
           
           """)
+    temp = input("Please select out of the possible options")
 
 #Demo students/instructors/courses
 add_instructor("Jane doe","John@john.com","123-498-1087","micro-johnery")
