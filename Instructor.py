@@ -3,10 +3,12 @@ from Human import human
 class instructor(human):
     __Degree = ""
     __Courses = []
-    def __init__(self,id,name,email,contact,degree,courses):
+    def __init__(self,id,name,email,contact,degree,courses,debug=False):
         super().__init__(id,name,email,contact)
         self.__Degree = degree 
         self.__Courses = courses
+        if debug: 
+            print(courses)
     def get_degree(self):
         return self.__Degree 
     def set_degree(self,newdegree):
@@ -25,5 +27,7 @@ class instructor(human):
     def displayinfo(self,copyofcourselist):
         coursestring = ""
         for key in self.__Courses:
+            print(key)
+            print(self.__Courses)
             coursestring += f"  {copyofcourselist[key].getClassName()}\n  id: {copyofcourselist[key].getClassID()} \n  instructor: {copyofcourselist[key].getInstructor()} \n  location: {copyofcourselist[key].getLocation()} \n  semesterid: {copyofcourselist[key].getSemesterID()}\n  semestername: {copyofcourselist[key].getSemesterName()} \n"
         return "Instructor\n"+ super().displayinfo() + f"\nMajor: {self.__Degree}\n Courses\n" + coursestring
