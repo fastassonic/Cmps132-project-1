@@ -98,7 +98,7 @@ def studentmenu():
     
 
 def instructorsmenu():
-    menudict={}
+
     print("""
           Instructor submenu
           1. Add instructor 
@@ -107,19 +107,6 @@ def instructorsmenu():
           4. View Instructor 
           5. Back
           """)
-    temp = input("Please select out of the possible options")
-    if temp in list(menudict.keys()).append("5"): 
-        print("Good boy!")
-        if temp == "5":
-            #This is a dumb hack. 
-            return False
-        else:
-            menudict[temp]()
-            return False
-    else: 
-        print("Wow, a contrarian!")
-        return False
-    
 
 def classesmenu():
     print("""
