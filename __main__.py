@@ -40,11 +40,13 @@ def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     coursesdict[key] = Courses(key,name,instructorid,location,semesterID,semesterName,studentList)
     if instructorid != "":
         Instructordict[instructorid].AddCourse(coursesdict[key])
-def dict_selector(tempdict):
+def dict_selector(tempdict,customopt = []):
     for i in tempdict.keys():
         print(f"{i}:{tempdict[i].get_name()}")
-    temp = input("please select one of the options")
-    if temp in tempdict.keys():
+    for i in customopt:
+        print(f"Other options: {i}")
+    temp = input("please select one of the options: ")
+    if temp in tempdict.keys() or temp in customopt:
         return temp
     else:
         return dict_selector(tempdict)
@@ -61,6 +63,10 @@ def changer_instructor_for_class(course,instructor):
 def add_student_to_course(course,student):
     student.AddCourse(course)
     course.AddTooStudentList(student.get_id())
+def del_student_from_course(course,student):
+    student.DropCourse(course)
+    course.removefromstudentlist(student.get_id())
+    
     
 def printallinstructorsdetails():
     for i in Instructordict.keys():
@@ -105,27 +111,151 @@ def studentmenu():
           2. Remove student 
           3. Edit student 
           4. View student
-          5. Back 
+          5. Classes submenu
+          6.back
           """)
-    temp = input("Please select out of the possible options")
-    if temp in ["1","2","3","4",""]:
+    temp = input("Please select out of the possible options ")
+    if temp in ["1","2","3","4","5","6"]:
         if temp == "1":
             #putting the args here to make it easier to write
             #name,email,contact,major,dob
             tempid = add_student(input("Student name?: "),input("Student Email?: "),"Student contact?: ",input("Student's major?: "),input("Student's DOB?: "))
             print(Studentdict[tempid].displayinfo())
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studentmenu()
         if temp == "2":
             if len(Studentdict) > 1:
                 tempid = dict_selector(Studentdict)
                 remove_student(tempid)
             else:
                 print("Number of students would be reduced to 0 during this operation. Please create a new student before destroying the last one ")
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studentmenu()
+        if temp == "3":
+            studenteditmenu()
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studentmenu()
         
+        if temp == "4":
+            tempid = dict_selector(Studentdict,["all"])
+            if tempid.lower() == "all":
+                printallstudentdetails()
+            else:
+                print(Studentdict[tempid].displayinfo())
+                
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studentmenu()
+    else:
+        print("not a valid option ")
+        studentmenu()
         
 
+def studentclassmenu(editingid=""):
+    if editingid == "":
+        editingid = dict_selector(Studentdict)
+    
+    print("""
+          Student Classes submenu
+          1. Add course
+          2. Del course
+          3. View registered courses 
+          4. Change course grades (PLEASE IMPLEMENT THIS I SWEAR)
+          5. Back
+          """)
+    temp = input("Please select out of the possible option ")
+    if temp == ["1","2","3","4","5"]:
+        if temp == "1":
+            add_student_to_course(coursesdict[dict_selector(coursesdict)],Studentdict[editingid])
+        if temp == "2":
+            del_student_from_course(coursesdict[dict_selector(Studentdict[editingid].returncourselist())],Studentdict[editingid])
+            
+    
 def studenteditmenu(editingid=""):
     if editingid == "":
         editingid = dict_selector(Studentdict)
+        #print(editingid)
+    print(""" 
+          Student editing submenu:
+          1. Change name
+          2. Change email
+          3. Change contact 
+          4. Change major 
+          5. Change dob
+          6. Back
+          """)
+    temp = input("Please select out of the possible option ")
+    if temp in ["1","2","3","4","5","6"]:
+        if temp == "1":
+            Studentdict[editingid].set_name(input("Please enter new name: "))
+            print(Studentdict[editingid].get_name())
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studenteditmenu(editingid)
+        if temp == "2":
+            Studentdict[editingid].set_email(input("Please enter new email: "))
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studenteditmenu(editingid)
+        if temp == "3":
+            Studentdict[editingid].set_contact(input("Please enter new contact details: "))
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studenteditmenu(editingid)
+        if temp == "4":
+            Studentdict[editingid].setMajor(input("Please enter new major: "))
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studenteditmenu(editingid)
+        if temp == "5":
+            Studentdict[editingid].setDOB(input("Please enter new DOB: "))
+            print(""" 
+                  Would you like to resume?
+                  1. Yes
+                  2. No
+                  """)
+            if input("") == "1":
+                studenteditmenu(editingid)
+            
+        if temp == "6":
+            studentmenu()
+    else:
+        studenteditmenu(editingid)
 def instructorsmenu():
     print("""
           Instructor submenu

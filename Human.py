@@ -21,7 +21,8 @@ class human:
     def set_id(self,newid):
         self._id = newid 
     def set_name(self,newname):
-        self.name = newname 
+        print("Changing name")
+        self._name = newname 
     def set_email(self,newemail):
         self._email = newemail
     def set_contact(self,newcontact):

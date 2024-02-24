@@ -37,6 +37,11 @@ class Courses:
     def AddTooStudentList(self,newitem):
         print(newitem)
         self._studentList.append(newitem)
+    def removefromstudentlist(self,delitem):
+        if delitem in self._studentList:
+            self._studentList.remove(delitem)
+        else:
+            print("Student id not found? How is this happening")
     def displayinfo(self):
         #id,name,instructor,location,semesterID,semesterName,studentList
         return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent Id List: {self._studentList}"

@@ -26,11 +26,13 @@ class student(human):
             del self.__courses[course.getClassID()]
         else:
             print("No class found for {course.getcourseid()}")
-    def returncourse(self,updatedcourse):
+    def updatecourse(self,updatedcourse):
         if updatedcourse.getcourseid() in self.__courses.keys():
-            self.__courses[updatedcourse.getcourseid()] = updatedcourse 
+            self.__courses[updatedcourse.getcourseid()] = StudentCourse(updatedcourse.get_name(),str(updatedcourse.getClassID()),updatedcourse.getInstructor(),updatedcourse.getLocation(),updatedcourse.getSemesterID,updatedcourse.getSemesterName(),updatedcourse.getStudentList(),self.__courses[updatedcourse.getcourseid()].getGrade()) 
         else:
             print(f"the student appears to be missing {updatedcourse.getcoursename()}")
+    def returncourselist(self):
+        return self.__courses
     def returncourse(self,id):
         print(id)
         if id in self.__courses.keys():
@@ -40,7 +42,7 @@ class student(human):
     def displayinfo(self):
         coursestring = ""
         for key in self.__courses.keys():
-            coursestring += self.__courses[key].displayinfo()
+            coursestring += self.__courses[key].displayinfo() + f"\nGrade: {self.__courses[key].getGrade()}"
         return super().displayinfo()[:] + f"\nMajor: {self.__major}\nDate of birth: {self.__dob} \nCourses \n " + coursestring
     
     
