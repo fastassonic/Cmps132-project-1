@@ -2,8 +2,8 @@ import Courses
 class StudentCourse(Courses):
     def __init__(self,name,id,instructor,location,semesterID,semestername,studentList,grade):
         super().__init__(name,id,instructor,location,semesterID,semestername,studentList)
-        self.grade=grade
+        self._grade=grade
     def getGrade(self):
-        return self.grade
+        return self._grade
     def setGrade(self,newgrade):
-        self.grade=newgrade
+        self._grade=newgrade

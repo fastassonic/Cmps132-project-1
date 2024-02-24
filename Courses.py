@@ -1,37 +1,37 @@
 class Courses:
     def __init__(self,id,name,instructor,location,semesterID,semesterName,studentList):
-        self.id=id
-        self.name=name
-        self.instructor=instructor
-        self.location=location
-        self.semesterID=semesterID
-        self.semesterName=semesterName
-        self.studentList=studentList
+        self._id=id
+        self._name=name
+        self._instructor=instructor
+        self._location=location
+        self._semesterID=semesterID
+        self._semesterName=semesterName
+        self._studentList=studentList
     def getClassID(self):
-        return self.id
+        return self._id
     def getClassName(self):
-        return self.name
+        return self._name
     def getInstructor(self):
-        return self.instructor
+        return self._instructor
     def getLocation(self):
-        return self.location
+        return self._location
     def getSemesterID(self):
-        return self.semesterID
+        return self._semesterID
     def getSemesterName(self):
-        return self.semesterName
+        return self._semesterName
     def setClassID(self,newid):
-        self.id=newid
+        self._id=newid
     def setClassName(self,newname):
-        self.name=newname
+        self._name=newname
     def setInstructor(self,newInstructor):
-        self.instructor=newInstructor
+        self._instructor=newInstructor
     def setLocation(self,newLocation):
-        self.location=newLocation
+        self._location=newLocation
     def setSemesterID(self,newsid):
-        self.semesterID=newsid
+        self._semesterID=newsid
     def setSemesterName(self,newsname):
-        self.semesterName=newsname
+        self._semesterName=newsname
     def getStudentList(self):
-        return self.studentList
+        return self._studentList
     def setStudentList(self,newlist):
-        self.studentList=newlist
+        self._studentList=newlist
