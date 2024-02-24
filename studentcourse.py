@@ -1,4 +1,4 @@
-import Courses
+from Courses import Courses
 class StudentCourse(Courses):
     def __init__(self,name,id,instructor,location,semesterID,semestername,studentList,grade):
         super().__init__(name,id,instructor,location,semesterID,semestername,studentList)

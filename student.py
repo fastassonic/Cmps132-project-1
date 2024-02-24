@@ -1,9 +1,9 @@
-import Human
-class Student(Human):
+from Human import human
+class student(human):
     __major = ""
     __dob = ""
     __courses = {}
-    def __init__(self,id,name,email,contact,major,dob,courses = {}):
+    def __init__(self,id,name,email,contact,major,dob,courses):
         super().__init__(id,name,email,contact)
         self.__major=major
         self.__dob=dob
