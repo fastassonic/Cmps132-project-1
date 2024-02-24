@@ -14,14 +14,16 @@ class instructor(human):
     def get_courses(self):
         return self.__Courses
     def AddCourse(self,course):
-        self.__Courses.append(str(course.getcourseid()))
+        if not str(course.getClassID()) in self.__Courses:
+            self.__Courses.append(str(course.getClassID()))
     def DropCourse(self,course):
-        if str(course.getcourseid()) in self.__courses:
-            self.__Courses.remove(str(course.getcourseid()))
+        if str(course.getClassID()) in self.__Courses:
+            self.__Courses.remove(str(course.getClassID()))
         else:
-            print(f"No class found for {course.getcourseid()}") 
+            print(self.__Courses)
+            print(f"No class found for {course.getClassID()}") 
     def displayinfo(self,copyofcourselist):
         coursestring = ""
         for key in self.__Courses:
-            coursestring += f"  {copyofcourselist[key].getclassname()}\n  id: {copyofcourselist[key].getid()} \n  instructor: {copyofcourselist[key].getinstructor()} \n  location: {copyofcourselist[key].getlocation()} \n  semesterid: {copyofcourselist[key].getsemesterid()}\n  semestername: {copyofcourselist[key].getsemestername()} \n"
-        return super().displayinfo() + f"\nMajor: {self.__Degree}\n Courses" + coursestring
+            coursestring += f"  {copyofcourselist[key].getClassName()}\n  id: {copyofcourselist[key].getClassID()} \n  instructor: {copyofcourselist[key].getInstructor()} \n  location: {copyofcourselist[key].getLocation()} \n  semesterid: {copyofcourselist[key].getSemesterID()}\n  semestername: {copyofcourselist[key].getSemesterName()} \n"
+        return "Instructor\n"+ super().displayinfo() + f"\nMajor: {self.__Degree}\n Courses\n" + coursestring
