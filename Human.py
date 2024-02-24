@@ -30,9 +30,4 @@ class human:
         return f"Id number: {self._id} \nName: {self._name} \nEmail: {self._email}\nContactNumber: {self._contact}"
 
 
-
-dave = human(1,"David","Dave@hotsinglesinyourarea.com","123")
-
-print(dave.displayinfo())        
-    
     
