@@ -1,3 +1,4 @@
+from studentcourse import StudentCourse
 from Human import human
 class student(human):
     __major = ""
@@ -19,10 +20,10 @@ class student(human):
     def setDOB(self,newdob):
         self.__dob=newdob
     def AddCourse(self,course):
-        self.__courses[str(course.getcourseid())] = course
+        self.__courses[str(course.getClassID())] = StudentCourse(course.getClassName(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID,course.getSemesterName(),course.getStudentList(),100)
     def DropCourse(self,course):
-        if str(course.getcourseid()) in self.__courses.keys():
-            del self.__courses[course.getcourseid()]
+        if str(course.getClassID()) in self.__courses.keys():
+            del self.__courses[course.getClassID()]
         else:
             print("No class found for {course.getcourseid()}")
     def returncourse(self,updatedcourse):
@@ -38,5 +39,5 @@ class student(human):
     def displayinfo(self):
         coursestring = ""
         for key in self.__courses.keys():
-            coursestring += f"  {self.__courses[key].getclassname()}\n  id: {self.__courses[key].getid()} \n  instructor: {self.__courses[key].getinstructor()} \n  location: {self.__courses[key].getlocation()} \n  semesterid: {self.__courses[key].getsemesterid()}\n  semestername: {self.__courses[key].getsemestername()} \n"
+            coursestring += self.__courses[key].displayinfo()
         return super().displayinfo() + f"\nMajor: {self.__major}\nDate of birth: {self.__dob} \n Courses" + coursestring

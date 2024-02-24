@@ -16,6 +16,7 @@ class instructor(human):
     def get_courses(self):
         return self.__Courses
     def AddCourse(self,course):
+        print(f"{self._name} is adding a course")
         if not str(course.getClassID()) in self.__Courses:
             self.__Courses.append(str(course.getClassID()))
     def DropCourse(self,course):
@@ -27,7 +28,8 @@ class instructor(human):
     def displayinfo(self,copyofcourselist):
         coursestring = ""
         for key in self.__Courses:
-            print(key)
-            print(self.__Courses)
-            coursestring += f"  {copyofcourselist[key].getClassName()}\n  id: {copyofcourselist[key].getClassID()} \n  instructor: {copyofcourselist[key].getInstructor()} \n  location: {copyofcourselist[key].getLocation()} \n  semesterid: {copyofcourselist[key].getSemesterID()}\n  semestername: {copyofcourselist[key].getSemesterName()} \n"
+            
+            coursestring += f"  {copyofcourselist[key].getClassName()}\n   id: {copyofcourselist[key].getClassID()} \n   instructor: {copyofcourselist[key].getInstructor()} \n   location: {copyofcourselist[key].getLocation()} \n   semesterid: {copyofcourselist[key].getSemesterID()}\n   semestername: {copyofcourselist[key].getSemesterName()} \n"
+        if coursestring == "":
+            coursestring = "  [Teaching no classes]"
         return "Instructor\n"+ super().displayinfo() + f"\nMajor: {self.__Degree}\n Courses\n" + coursestring
