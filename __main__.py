@@ -52,6 +52,7 @@ def printallstudentdetails():
 #menu functions 
 
 def mainmenu():
+    menudict = {"1":studentmenu,"2":instructorsmenu,"3":classesmenu}
     print("""
           Welcome to the pen state beaver student lead Student management system
           (Note Students are not responsible for any \"Accidental Penn testing that occurs in this system\")
@@ -67,17 +68,50 @@ def mainmenu():
             print("Bye bye")
             return True
         else:
+            menudict[temp]()
             return False
     else: 
         print("Wow, a contrarian!")
         return False
 
+def studentmenu():
+    print("""
+          Student submenu 
+          1. Add student 
+          2. Remove student 
+          3. Edit student 
+          4. View student
+          5. Back 
+          """)
+    
+
+def instructorsmenu():
+    print("""
+          Instructor submenu
+          1. Add instructor 
+          2. Remove instructor 
+          3. Edit instructor 
+          4. View Instructor 
+          5. Back
+          """)
+
+def classesmenu():
+    print("""
+          Courses submenu
+          1. Add course 
+          2. Remove course 
+          3. Edit course
+          4. View course 
+          5. Back 
+          
+          """)
 
 #Demo students/instructors/courses
 add_instructor("Jane doe","John@john.com","123-498-1087","micro-johnery")
 add_instructor("John doe","John@john.com","123-498-1087","macro-johnery",[],True)
 add_student("Janie bill","Janie@janie.com","123-abc","Macro johnery","12/19/1")
 add_course("Microjohning 101",Instructordict["2"],"John town","123","Summer")
+
 
 
 printallstudentdetails()
