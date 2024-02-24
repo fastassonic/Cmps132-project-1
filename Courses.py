@@ -37,4 +37,4 @@ class Courses:
         self._studentList=newlist
     def displayinfo(self):
         #id,name,instructor,location,semesterID,semesterName,studentList
-        return f"Id number: {self._id}\nname: {self.name}\n "
+        return f"Id number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent Id List: {self._studentList}"

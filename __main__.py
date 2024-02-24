@@ -31,4 +31,4 @@ for i in Instructordict.keys():
 for i in Studentdict.keys():
     print(Studentdict[i].displayinfo())
 for i in coursesdict.keys():
-    print(coursesdict[i])
+    print(coursesdict[i].displayinfo())
