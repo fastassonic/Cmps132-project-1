@@ -16,7 +16,6 @@ class instructor(human):
     def get_courses(self):
         return self.__Courses
     def AddCourse(self,course):
-        print(f"{self._name} is adding a course")
         if not str(course.getClassID()) in self.__Courses:
             self.__Courses.append(str(course.getClassID()))
     def DropCourse(self,course):

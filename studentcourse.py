@@ -1,7 +1,7 @@
 from Courses import Courses
 class StudentCourse(Courses):
     def __init__(self,name,id,instructor,location,semesterID,semestername,studentList,grade):
-        super().__init__(name,id,instructor,location,semesterID,semestername,studentList)
+        super().__init__(id,name,instructor,location,semesterID,semestername,studentList)
         self._grade=grade
     def getGrade(self):
         return self._grade
@@ -9,4 +9,4 @@ class StudentCourse(Courses):
         self._grade=newgrade
     def displayinfo(self):
         #id,name,instructor,location,semesterID,semesterName,studentList
-        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent Grade List: {self._grade}"
+        return f"Course Id number: {self._id}\n name: {self._name}\n Instructor Id: {self._instructor}\n Location: {self._location}\n Semester id: {self._semesterID}\n Semester Name: {self._semesterName}\n Student Grade List: {self._grade}"

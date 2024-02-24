@@ -32,6 +32,7 @@ class student(human):
         else:
             print(f"the student appears to be missing {updatedcourse.getcoursename()}")
     def returncourse(self,id):
+        print(id)
         if id in self.__courses.keys():
             return self.__courses[id]
         else:
@@ -40,4 +41,9 @@ class student(human):
         coursestring = ""
         for key in self.__courses.keys():
             coursestring += self.__courses[key].displayinfo()
-        return super().displayinfo() + f"\nMajor: {self.__major}\nDate of birth: {self.__dob} \n Courses" + coursestring
+        return super().displayinfo()[:] + f"\nMajor: {self.__major}\nDate of birth: {self.__dob} \nCourses \n " + coursestring
+    
+    
+    
+    
+    
