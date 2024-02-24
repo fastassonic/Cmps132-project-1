@@ -8,9 +8,17 @@ coursesdict = {}
 Finished = False
 #Global methods
 def add_instructor(name,email,contact,degree,courses=[],debug=False):
-    Instructordict[str(len(Instructordict.keys())+1)] = instructor(str(len(Instructordict.keys())+1),name,email,contact,degree,courses,debug)
+    if len(Instructordict) >= 1:
+        key = str(int(list(Instructordict.keys())[-1]) + 1 )
+    else:
+        key = "1"
+    Instructordict[key] = instructor(key,name,email,contact,degree,courses,debug)
 def add_student(name,email,contact,major,dob,courses = {}):
-    Studentdict[str(len(Studentdict.keys())+1)] = student(str(len(Studentdict.keys())+1),name,email,contact,major,dob,courses)
+    if len(Studentdict) >= 1:
+        key = str(int(list(Studentdict.keys())[-1]) + 1 )
+    else:
+        key = "1"
+    Studentdict[key] = student(key,name,email,contact,major,dob,courses)
 def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     if instructor != "undefined": 
         try:
@@ -21,9 +29,13 @@ def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     else: 
         print("Given undefined instructor command. Assuming you have yet to build the teacher for this class.")
         instructorid = ""
-    coursesdict[str(len(coursesdict.keys())+1)] = Courses(str(len(coursesdict.keys())+1),name,instructorid,location,semesterID,semesterName,studentList)
+    if len(coursesdict) >= 1:
+        key = str(int(list(coursesdict.keys())[-1]) + 1 )
+    else:
+        key = "1"
+    coursesdict[key] = Courses(key,name,instructorid,location,semesterID,semesterName,studentList)
     if instructorid != "":
-        Instructordict[instructorid].AddCourse(coursesdict[str(len(coursesdict.keys()))])
+        Instructordict[instructorid].AddCourse(coursesdict[key])
 
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
@@ -86,6 +98,7 @@ def studentmenu():
     
 
 def instructorsmenu():
+    menudict={}
     print("""
           Instructor submenu
           1. Add instructor 
@@ -94,6 +107,19 @@ def instructorsmenu():
           4. View Instructor 
           5. Back
           """)
+    temp = input("Please select out of the possible options")
+    if temp in list(menudict.keys()).append("5"): 
+        print("Good boy!")
+        if temp == "5":
+            #This is a dumb hack. 
+            return False
+        else:
+            menudict[temp]()
+            return False
+    else: 
+        print("Wow, a contrarian!")
+        return False
+    
 
 def classesmenu():
     print("""
