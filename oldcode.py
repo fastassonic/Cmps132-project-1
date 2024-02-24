@@ -84,7 +84,7 @@ def selection_from_dict(temp_dict):
             validchoice = True
 
     return (temp_list[int(classchoice)])
-
+#God i dislike polymorphism 
 def selection_from_list(temp_list, bookstoreflag=False):
     if bookstoreflag == False:
         for i in range(len(temp_list)):
