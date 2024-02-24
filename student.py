@@ -20,7 +20,7 @@ class student(human):
     def setDOB(self,newdob):
         self.__dob=newdob
     def AddCourse(self,course):
-        self.__courses[str(course.getClassID())] = StudentCourse(course.get_name(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID,course.getSemesterName(),course.getStudentList(),100)
+        self.__courses[str(course.getClassID())] = StudentCourse(course.get_name(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID(),course.getSemesterName(),course.getStudentList(),100)
     def DropCourse(self,course):
         if str(course.getClassID()) in self.__courses.keys():
             del self.__courses[course.getClassID()]
@@ -28,7 +28,7 @@ class student(human):
             print("No class found for {course.getcourseid()}")
     def updatecourse(self,updatedcourse):
         if updatedcourse.getcourseid() in self.__courses.keys():
-            self.__courses[updatedcourse.getcourseid()] = StudentCourse(updatedcourse.get_name(),str(updatedcourse.getClassID()),updatedcourse.getInstructor(),updatedcourse.getLocation(),updatedcourse.getSemesterID,updatedcourse.getSemesterName(),updatedcourse.getStudentList(),self.__courses[updatedcourse.getcourseid()].getGrade()) 
+            self.__courses[updatedcourse.getcourseid()] = StudentCourse(updatedcourse.get_name(),str(updatedcourse.getClassID()),updatedcourse.getInstructor(),updatedcourse.getLocation(),updatedcourse.getSemesterID(),updatedcourse.getSemesterName(),updatedcourse.getStudentList(),self.__courses[updatedcourse.getcourseid()].getGrade()) 
         else:
             print(f"the student appears to be missing {updatedcourse.getcoursename()}")
     def returncourselist(self):
@@ -39,10 +39,13 @@ class student(human):
             return self.__courses[id]
         else:
             print("Id not found")
+    def gradechange(self,id,newgrade):
+        if id in self.__courses.keys():
+            self.__courses[id].setGrade(newgrade)
     def displayinfo(self):
         coursestring = ""
         for key in self.__courses.keys():
-            coursestring += self.__courses[key].displayinfo() + f"\nGrade: {self.__courses[key].getGrade()}"
+            coursestring += self.__courses[key].displayinfo()
         return super().displayinfo()[:] + f"\nMajor: {self.__major}\nDate of birth: {self.__dob} \nCourses \n " + coursestring
     
     

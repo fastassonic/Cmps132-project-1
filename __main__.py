@@ -7,6 +7,19 @@ Studentdict = {}
 coursesdict = {}
 Finished = False
 #Global methods
+def dict_selector(tempdict,customopt = []):
+    #TODO Eventually setup a method to back out of this and have all associated methods deal with the result, shouldn't be to hard to insert a return "No-choice you meatwad"
+    for i in tempdict.keys():
+        print(f"{i}:{tempdict[i].get_name()}")
+    for i in customopt:
+        print(f"Other options: {i}")
+    temp = input("please select one of the options: ")
+    if temp in tempdict.keys() or temp in customopt:
+        return temp
+    else:
+        return dict_selector(tempdict)
+
+
 def add_instructor(name,email,contact,degree,courses=[],debug=False):
     if len(Instructordict) >= 1:
         key = str(int(list(Instructordict.keys())[-1]) + 1 )
@@ -40,17 +53,7 @@ def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
     coursesdict[key] = Courses(key,name,instructorid,location,semesterID,semesterName,studentList)
     if instructorid != "":
         Instructordict[instructorid].AddCourse(coursesdict[key])
-def dict_selector(tempdict,customopt = []):
-    for i in tempdict.keys():
-        print(f"{i}:{tempdict[i].get_name()}")
-    for i in customopt:
-        print(f"Other options: {i}")
-    temp = input("please select one of the options: ")
-    if temp in tempdict.keys() or temp in customopt:
-        return temp
-    else:
-        return dict_selector(tempdict)
-    
+
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
     Instructordict[course.getInstructor()].DropCourse(course)
@@ -143,28 +146,14 @@ def studentmenu():
                 studentmenu()
         if temp == "3":
             studenteditmenu()
-            print(""" 
-                  Would you like to resume?
-                  1. Yes
-                  2. No
-                  """)
-            if input("") == "1":
-                studentmenu()
-        
         if temp == "4":
             tempid = dict_selector(Studentdict,["all"])
             if tempid.lower() == "all":
                 printallstudentdetails()
             else:
                 print(Studentdict[tempid].displayinfo())
-                
-            print(""" 
-                  Would you like to resume?
-                  1. Yes
-                  2. No
-                  """)
-            if input("") == "1":
-                studentmenu()
+        if temp == "5":
+            studentclassmenu()
     else:
         print("not a valid option ")
         studentmenu()
@@ -179,15 +168,30 @@ def studentclassmenu(editingid=""):
           1. Add course
           2. Del course
           3. View registered courses 
-          4. Change course grades (PLEASE IMPLEMENT THIS I SWEAR)
+          4. Change course grades 
           5. Back
           """)
     temp = input("Please select out of the possible option ")
-    if temp == ["1","2","3","4","5"]:
+    if temp in ["1","2","3","4","5"]:
         if temp == "1":
+            print("Toggled one")
             add_student_to_course(coursesdict[dict_selector(coursesdict)],Studentdict[editingid])
         if temp == "2":
             del_student_from_course(coursesdict[dict_selector(Studentdict[editingid].returncourselist())],Studentdict[editingid])
+        if temp == "3":
+            for i in Studentdict[editingid].returncourselist():
+                i.displayinfo()
+        if temp == "4":
+            coursesid = dict_selector(Studentdict[editingid].returncourselist())
+            tempgrade = ""
+            while not tempgrade.isnumeric():
+                try:
+                    tempgrade = input("Enter in the new grade")
+                except:
+                    tempgrade = ""
+            Studentdict[editingid].gradechange(coursesid,int(tempgrade))
+        if temp == "5":
+            studentmenu()
             
     
 def studenteditmenu(editingid=""):

@@ -44,4 +44,4 @@ class Courses:
             print("Student id not found? How is this happening")
     def displayinfo(self):
         #id,name,instructor,location,semesterID,semesterName,studentList
-        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent Id List: {self._studentList}"
+        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nSemester id: {self._semesterID()}\nSemester Name: {self._semesterName}\nStudent Id List: {self._studentList}"
