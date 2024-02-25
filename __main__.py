@@ -22,7 +22,9 @@ def dict_selector(tempdict,customopt = [],allowback=False):
         return dict_selector(tempdict,customopt,allowback)
 
 
-def add_instructor(name,email,contact,degree,courses=[],debug=False):
+def add_instructor(name,email,contact,degree,courses=None,debug=False): 
+    if courses == None:
+        courses = list()
     if len(Instructordict) >= 1:
         key = str(int(list(Instructordict.keys())[-1]) + 1 )
     else:
@@ -41,7 +43,10 @@ def remove_student(id):
         coursesdict[i].removefromstudentlist(id)
     del Studentdict[id]
     printallcoursesdetails()
-def add_course(name,instructor,location,semesterID,semesterName,studentList=[]):
+def add_course(name,instructor,location,semesterID,semesterName,studentList=None):
+    #Note, python is awkward. This is to prevent list sharing, hence why studentlist != [] initially
+    if studentList == None: 
+        studentList = []
     if instructor != "undefined": 
         try:
             instructorid = str(instructor.get_id())
@@ -72,9 +77,9 @@ def del_course(courseid):
         Studentdict[i].DropCourse(coursesdict[courseid])
     del coursesdict[courseid]
 def add_student_to_course(course,student):
-    print(course.get_name())
-    student.AddCourse(course)
-    course.AddTooStudentList(student.get_id())
+    print(course)
+    student.AddCourse(coursesdict[course])
+    coursesdict[course].AddTooStudentList(student.get_id())
 def del_student_from_course(course,student):
     student.DropCourse(course)
     course.removefromstudentlist(student.get_id())
@@ -192,8 +197,8 @@ def studentclassmenu(editingid=""):
         if temp in ["1","2","3","4","5"]:
             if temp == "1":
                 print("Toggled one")
-                tempcourse = coursesdict[dict_selector(coursesdict)]
-                print(f"Tempcourse is {tempcourse.get_name()}")
+                tempcourse = dict_selector(coursesdict)
+                print(f"Tempcourse is {tempcourse}")
                 add_student_to_course(tempcourse,Studentdict[editingid])
             if temp == "2":
                 tempcourse = coursesdict[dict_selector(Studentdict[editingid].returncourselist())]
