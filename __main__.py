@@ -85,8 +85,8 @@ def del_student_from_course(course,student):
     course.removefromstudentlist(student.get_id())
 
 def updateallstudentcourse(course):
-    for i in course.getstudentlist():
-        print()
+    for i in course.getStudentList():
+        Studentdict[i].updatecourse(course)
         
     
     
@@ -327,8 +327,85 @@ def classesmenu():
                 del_course(courseid)
 
                 printallcoursesdetails()
+        if temp == "3":
+            courseeditmenu()
         if temp == "4":
             printallcoursesdetails()
+
+def courseeditmenu(courseid=""):
+    if courseid=="":
+        courseid = dict_selector(coursesdict)
+    if courseid.lower() != "back":
+        print(""" 
+            Course editing submenu:
+            1. Change name
+            2. Change instructor
+            3. Change location 
+            4. Change semesterid
+            5. Change semestername
+            6. Back
+            """)
+        temp = input("Please select out of the possible option ")
+        if temp in ["1","2","3","4","5","6"]:
+            if temp == "1":
+                coursesdict[courseid].setClassName(input("Please enter new name: "))
+                updateallstudentcourse(coursesdict[courseid])
+                print(""" 
+                    Would you like to resume editing?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    courseeditmenu(courseid)
+            if temp == "2":
+                instructorid = dict_selector(Instructordict)
+                changer_instructor_for_class(coursesdict[courseid],Instructordict[instructorid])
+                
+                print(""" 
+                    Would you like to resume editing?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    courseeditmenu(courseid)
+            if temp == "3":
+                coursesdict[courseid].setLocation(input("Please enter new loccation: "))
+                updateallstudentcourse(coursesdict[courseid])
+                print(""" 
+                    Would you like to resume editing?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    courseeditmenu(courseid)
+            if temp == "4":
+                coursesdict[courseid].setSemesterId("Please enter new semester Id")
+                updateallstudentcourse(coursesdict[courseid])
+                print(""" 
+                    Would you like to resume editing?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    courseeditmenu(courseid)
+            if temp == "5":
+                coursesdict[courseid].setSemesterId("Please enter new semester Id")
+                updateallstudentcourse(coursesdict[courseid])
+                print(""" 
+                    Would you like to resume editing?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    courseeditmenu(courseid)
+                
+            if temp == "6":
+                studentmenu()
+    else:
+        studenteditmenu(courseid)
+    
+    
+    
             
 
 #Demo students/instructors/courses

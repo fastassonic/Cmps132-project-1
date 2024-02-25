@@ -1,4 +1,5 @@
 class Courses:
+    #TODO gonna suck but we need to add date and time to this.... augh
     def __init__(self,id,name,instructor,location,semesterID,semesterName,studentList):
         self._id=id
         self._name=name
