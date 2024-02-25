@@ -7,7 +7,9 @@ Studentdict = {}
 coursesdict = {}
 Finished = False
 #Global methods
-def dict_selector(tempdict,customopt = [],allowback=False):
+def dict_selector(tempdict,customopt = None,allowback=False):
+    if customopt == None:
+        customopt = []
     #TODO Eventually setup a method to back out of this and have all associated methods deal with the result, shouldn't be to hard to insert a return "No-choice you meatwad"
     for i in tempdict.keys():
         print(f"{i}:{tempdict[i].get_name()}")
@@ -30,7 +32,9 @@ def add_instructor(name,email,contact,degree,courses=None,debug=False):
     else:
         key = "1"
     Instructordict[key] = instructor(key,name,email,contact,degree,courses,debug)
-def add_student(name,email,contact,major,dob,courses = {}):
+def add_student(name,email,contact,major,dob,courses = None):
+    if courses == None:
+        courses = {}
     if len(Studentdict) >= 1:
         key = str(int(list(Studentdict.keys())[-1]) + 1 )
     else:
