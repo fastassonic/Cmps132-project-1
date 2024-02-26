@@ -546,11 +546,15 @@ def courseeditmenu(courseid=""):
             
 
 #Demo students/instructors/courses
-add_instructor("Jane doe","John@john.com","123-498-1087","micro-johnery",[],True)
-add_instructor("John doe","John@john.com","123-498-1087","macro-johnery",[],True)
-add_student("Janie bill","Janie@janie.com","123-abc","Macro johnery","12/19/1")
-#name,instructor,location,semesterID,semesterName,date,time,studentList=None
-add_course("Microjohning 101",Instructordict["2"],"John town","123","Summer","MWF","12pm")
+add_instructor("Jane doe","Jane@john.com","123-498-1087","Physics",[],True)
+add_instructor("John doe","John@john.com","123-498-1087","English",[],True)
+add_instructor("Walter White","walterwhite@gmail.com","322-343-3422","Chemistry",[],True)
+add_student("Janie bill","Janie@janie.com","123-456-7890","Computer Science","12/19/1")
+add_student("Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Chemistry","09/24/84")
+add_student("Student McStudentface","student@student.com","1","Student Studies","02/02/02")
+add_course("Physics 211",Instructordict["1"],"Here","123","Summer","MWF","12pm")
+add_course("English 15",Instructordict["2"],"Also here","232","Winter","MWF","10am")
+add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
 
 #runtime loop
 while not Finished:
