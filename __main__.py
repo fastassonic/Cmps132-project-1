@@ -552,15 +552,6 @@ add_student("Janie bill","Janie@janie.com","123-abc","Macro johnery","12/19/1")
 #name,instructor,location,semesterID,semesterName,date,time,studentList=None
 add_course("Microjohning 101",Instructordict["2"],"John town","123","Summer","MWF","12pm")
 
-
-
-printallstudentdetails()
-#
-changer_instructor_for_class(coursesdict["1"],Instructordict["1"])
-printallstudentdetails()
-
-
-
 #runtime loop
 while not Finished:
     Finished = mainmenu()

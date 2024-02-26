@@ -1,4 +1,5 @@
-class human:
+from abc import ABC
+class human(ABC):
     _id = -1 
     _name = ""
     _email = ""
