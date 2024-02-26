@@ -24,7 +24,7 @@ class instructor(human):
         else:
             print(self.__Courses)
             print(f"No class found for {course.getClassID()}") 
-    def displayinfo(self,copyofcourselist):
+    def displayinstructorinfo(self,copyofcourselist):
         coursestring = ""
         for key in self.__Courses:
             

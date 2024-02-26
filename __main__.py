@@ -32,6 +32,7 @@ def add_instructor(name,email,contact,degree,courses=None,debug=False):
     else:
         key = "1"
     Instructordict[key] = instructor(key,name,email,contact,degree,courses,debug)
+    return key
 def add_student(name,email,contact,major,dob,courses = None):
     if courses == None:
         courses = {}
@@ -47,6 +48,9 @@ def remove_student(id):
         coursesdict[i].removefromstudentlist(id)
     del Studentdict[id]
     printallcoursesdetails()
+def remove_instructor(id):
+    del Instructordict[id]
+    printallinstructorsdetails()
 def add_course(name,instructor,location,semesterID,semesterName,date,time,studentList=None):
     #Note, python is awkward. This is to prevent list sharing, hence why studentlist != [] initially
     if studentList == None: 
@@ -96,7 +100,7 @@ def updateallstudentcourse(course):
     
 def printallinstructorsdetails():
     for i in Instructordict.keys():
-        print(Instructordict[i].displayinfo(coursesdict))    
+        print(Instructordict[i].displayinstructorinfo(coursesdict))
 
 def printallcoursesdetails():
     for i in coursesdict.keys():
@@ -110,7 +114,7 @@ def printallstudentdetails():
 def mainmenu():
     menudict = {"1":studentmenu,"2":instructorsmenu,"3":classesmenu}
     print("""
-          Welcome to the pen state beaver student lead Student management system
+          Welcome to the penn state beaver student lead Student management system
           (Note Students are not responsible for any \"Accidental Penn testing that occurs in this system\")
           1. Students 
           2. Instructors
@@ -145,7 +149,7 @@ def studentmenu():
         if temp == "1":
             #putting the args here to make it easier to write
             #name,email,contact,major,dob
-            tempid = add_student(input("Student name?: "),input("Student Email?: "),"Student contact?: ",input("Student's major?: "),input("Student's DOB?: "))
+            tempid = add_student(input("Student name?: "),input("Student Email?: "),input("Student contact?: "),input("Student's major?: "),input("Student's DOB?: "))
             print(Studentdict[tempid].displayinfo())
             print(""" 
                   Would you like to resume?
@@ -180,6 +184,8 @@ def studentmenu():
                 print(Studentdict[tempid].displayinfo())
         if temp == "5":
             studentclassmenu()
+        if temp=="6":
+            mainmenu()
     else:
         print("not a valid option ")
         studentmenu()
@@ -303,9 +309,105 @@ def instructorsmenu():
           5. Back
           """)
     temp = input("Please select out of the possible options")
-    
-    
+    if temp in ["1","2","3","4","5"]:
+        if temp=="1":
+            print("Adding Instructor")
+            tempid = add_instructor(input("Instructor's name?: "), input("Instructor's Email?: "), input("Instructor's contact?: "),input("Instructor's degree?: "))
+            print(Instructordict[tempid].displayinstructorinfo(coursesdict))
+            print(""" 
+                Would you like to resume?
+                1. Yes
+                2. No
+                """)
+            if input("") == "1":
+                instructorsmenu()
+        if temp == "2":
+            if len(Instructordict) > 1:
+                tempid = dict_selector(Instructordict, allowback=True)
+                if tempid.lower() != "back":
+                    remove_instructor(tempid)
+            else:
+                print("Number of instructors cannot be zero")
+            print(""" 
+                    Would you like to resume?
+                    1. Yes
+                    2. No
+                    """)
+            if input("") == "1":
+                    instructorsmenu()
+        if temp == "3":
+            instructoreditmenu()
+        if temp == "4":
+            tempid = dict_selector(Instructordict, ["all"], allowback=True)
 
+            if tempid.lower() == "all":
+                printallinstructorsdetails()
+            elif tempid.lower() == "back":
+                return ()
+            else:
+                print(Instructordict[tempid].displayinstructorinfo(coursesdict))
+        if temp == "5":
+            mainmenu()
+    else:
+        print("not a valid option ")
+        instructorsmenu()
+
+
+def instructoreditmenu(editingid=""):
+    if editingid == "":
+        editingid = dict_selector(Instructordict, allowback=True)
+    if editingid.lower() != "back":
+        print(""" 
+            Instructor editing submenu:
+            1. Change name
+            2. Change email
+            3. Change contact 
+            4. Change degree
+            5. Back
+            """)
+        temp = input("Please select out of the possible option ")
+        if temp in ["1", "2", "3", "4", "5"]:
+            if temp == "1":
+                Instructordict[editingid].set_name(input("Please enter new name: "))
+                print(Instructordict[editingid].get_name())
+                print(""" 
+                    Would you like to resume?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    instructoreditmenu(editingid)
+            if temp == "2":
+                Instructordict[editingid].set_email(input("Please enter new email: "))
+                print(""" 
+                    Would you like to resume?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    instructoreditmenu(editingid)
+            if temp == "3":
+                Instructordict[editingid].set_contact(input("Please enter new contact details: "))
+                print(""" 
+                    Would you like to resume?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    instructoreditmenu(editingid)
+            if temp == "4":
+                Instructordict[editingid].set_degree(input("Please enter new degree: "))
+                print(""" 
+                    Would you like to resume?
+                    1. Yes
+                    2. No
+                    """)
+                if input("") == "1":
+                    instructoreditmenu(editingid)
+            if temp == "5":
+                instructorsmenu()
+        else:
+            instructoreditmenu(editingid)
 def classesmenu():
     print("""
           Courses submenu
@@ -341,6 +443,8 @@ def classesmenu():
                 return()
             else:
                 print(coursesdict[tempid].displayinfo())
+        if temp=="5":
+            mainmenu()
 
 def courseeditmenu(courseid=""):
     if courseid=="":
@@ -442,7 +546,7 @@ def courseeditmenu(courseid=""):
             
 
 #Demo students/instructors/courses
-add_instructor("Jane doe","John@john.com","123-498-1087","micro-johnery")
+add_instructor("Jane doe","John@john.com","123-498-1087","micro-johnery",[],True)
 add_instructor("John doe","John@john.com","123-498-1087","macro-johnery",[],True)
 add_student("Janie bill","Janie@janie.com","123-abc","Macro johnery","12/19/1")
 #name,instructor,location,semesterID,semesterName,date,time,studentList=None
