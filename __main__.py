@@ -23,7 +23,6 @@ def dict_selector(tempdict,customopt = None,allowback=False):
     else:
         return dict_selector(tempdict,customopt,allowback)
 
-
 def add_instructor(name,email,contact,degree,courses=None,debug=False): 
     if courses == None:
         courses = list()

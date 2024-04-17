@@ -1,4 +1,5 @@
 from abc import ABC
+
 class human(ABC):
     _id = -1 
     _name = ""
