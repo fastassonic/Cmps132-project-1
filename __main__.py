@@ -21,12 +21,12 @@ college = TreeNode("College")
 
 def optionselector(tempdict):
     for i in tempdict.keys():
-        print(f"{i}:{tempdict[i].get_name()}")
+        print(f"{i}")
     temp = input("please select one of the options: ")
     if temp in tempdict.keys():
         return tempdict[temp]
     else:
-        return dict_selector(tempdict)
+        return optionselector(tempdict)
 
 def AddChild(node,name):
     allreadythere = False
@@ -164,10 +164,10 @@ def course_selector(tempcourses,customopt = None,allowback=False):
 def add_instructor(stack,name,email,contact,degree,courses=None,debug=False): 
     if courses == None:
         courses = list()
-    if stack.qsize >= 1:
+    if stack.qsize() >= 1:
         templist = []
         while not stack.empty():
-            templist.append(stack.pop())
+            templist.append(stack.get())
         key = str(int(templist[-1].get_id()) +1)
         for i in templist:
             stack.put(i)
@@ -537,7 +537,9 @@ def studenteditmenu(stack,editingid=""):
                 studentmenu()
         else:
             studenteditmenu(stack,editingid)
-def instructorsmenu(queue = Fallinstructor):
+def instructorsmenu(queue = None):
+    if queue == None:
+        queue = optionselector({"Spring":Springinstructor,"Fall":Fallinstructor})
     print("""
           Instructor submenu
           1. Add instructor 
@@ -550,7 +552,8 @@ def instructorsmenu(queue = Fallinstructor):
     if temp in ["1","2","3","4","5"]:
         if temp=="1":
             print("Adding Instructor")
-            tempid = add_instructor(input("Instructor's name?: "), input("Instructor's Email?: "), input("Instructor's contact?: "),input("Instructor's degree?: "))
+            
+            tempid = add_instructor(queue,input("Instructor's name?: "), input("Instructor's Email?: "), input("Instructor's contact?: "),input("Instructor's degree?: "))
             print(tempid)
             print(""" 
                 Would you like to resume?
@@ -683,7 +686,7 @@ def classesmenu(queue=None):
             elif tempid.lower() == "back":
                 return()
             else:
-                print(queue[(int)(tempid)-1].displayinfo())
+                print(coursesdict[(int)(tempid)].displayinfo())
         if temp=="5":
             mainmenu()
 
