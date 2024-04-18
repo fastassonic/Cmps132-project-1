@@ -3,6 +3,7 @@ from Instructor import instructor
 from student import student
 from queue import LifoQueue
 from collections import deque
+from Tree import TreeNode
 #Global declerations
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
 debug = False
@@ -10,6 +11,65 @@ Instructordict = {}
 Studentstack = LifoQueue()
 coursesdict = deque()
 Finished = False
+
+college = TreeNode("College")
+
+
+
+
+def AddChild(node,name):
+    allreadythere = False
+    for i in node.children:
+        if i.value == name:
+            allreadythere = True
+    if not (allreadythere):
+        node.add_child(TreeNode(name))
+    else:
+        print("Department allready exists")
+
+def RemoveChild(node,name):
+    allreadythere = False
+    for i in node.children:
+        if i.value == name:
+            allreadythere = True
+    if allreadythere:
+        node.remove_child(college.returnchild(name))
+    else:
+        print("Department doesn't exist")
+
+
+def treechildselector(node,customopt = None,allowback=False):
+    defaultoptions = []
+    if customopt == None:
+        customopt = []
+    for i in range(len(node.children)):
+        print(f"{i}:{node.children[i].value}")
+        defaultoptions.append(str(i))
+    for i in customopt:
+        print(f"Other options: {i}")
+    if allowback:
+        print("Enter \"Back\" to return to the previous menu")
+    temp = input("please select one of the options: ")
+    if temp in defaultoptions or temp in customopt or (temp.lower() == "back" and allowback):
+        return temp
+    else:
+        return treechildselector(node,customopt,allowback)
+
+def returnchild(node,id):
+    #I Should implement a value check for this but I won't. if this errors out you've done something wrong.
+    return node.children[id]
+
+
+def printallchildvalues(node):
+    print(f"Children for {node.value}")
+    for i in range(len(node.children)):
+        print(f"    Semseter {i}: {returnchild(node,i).value}")
+    
+
+
+        
+    
+
 #Global methods
 def dict_selector(tempdict,customopt = None,allowback=False):
     if customopt == None:
@@ -642,6 +702,13 @@ add_student("Student McStudentface","student@student.com","1","Student Studies",
 add_course("Physics 211",Instructordict["1"],"Here","123","Summer","MWF","12pm")
 add_course("English 15",Instructordict["2"],"Also here","232","Winter","MWF","10am")
 add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
+
+AddChild(college,"College of Enginering")
+AddChild(college,"College of Medicine")
+print(f"{returnchild(college,int(treechildselector(college))).value} was selected")
+
+AddChild(college,"General Education")
+printallchildvalues(college)
 
 #runtime loop
 while not Finished:
