@@ -323,6 +323,7 @@ def printallinstructorsdetails(queue):
         tempobj = queue.get()
         tempobj.displayinstructorinfo()
         templist.append(tempobj)
+
     for i in templist:
        queue.put(i)
 #menu functions 
@@ -645,7 +646,9 @@ def instructoreditmenu(queue,editingid=""):
                 instructorsmenu()
         else:
             instructoreditmenu(queue,editingid)
-def classesmenu():
+def classesmenu(queue=None):
+    if queue == None:
+        queue = optionselector({"Spring":springcourses,"Fall":fallcourses})
     print("""
           Courses submenu
           1. Add course 
@@ -666,27 +669,27 @@ def classesmenu():
                 add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name (either Spring or Fall): "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
                 printallcoursesdetails()
         if temp == "2":
-            courseid = course_selector(coursesdict,allowback=True)
+            courseid = course_selector(queue,allowback=True)
             if courseid.lower() != "back":
                 del_course(courseid)
 
                 printallcoursesdetails()
         if temp == "3":
-            courseeditmenu()
+            courseeditmenu(queue)
         if temp == "4":
-            tempid = course_selector(coursesdict,["all"],allowback=True)
+            tempid = course_selector(queue,["all"],allowback=True)
             if tempid.lower() == "all":
                 printallcoursesdetails()
             elif tempid.lower() == "back":
                 return()
             else:
-                print(coursesdict[(int)(tempid)-1].displayinfo())
+                print(queue[(int)(tempid)-1].displayinfo())
         if temp=="5":
             mainmenu()
 
-def courseeditmenu(courseid=""):
+def courseeditmenu(queue,courseid=""):
     if courseid=="":
-        courseid = (int)(course_selector(coursesdict))
+        courseid = (int)(course_selector(queue))
     if courseid != "back":
         print(""" 
             Course editing submenu:
@@ -710,7 +713,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
             if temp == "2":
                 tempqueue = optionselector({"Spring Instructor":Springinstructor,"Fall Instructor":Fallinstructor})
                 instructorid = queue_selector(tempqueue)
@@ -722,7 +725,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
             if temp == "3":
                 returncourse(courseid).setLocation(input("Please enter new loccation: "))
                 updateallstudentcourse(returncourse(courseid))
@@ -732,7 +735,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
             if temp == "4":
                 returncourse(courseid).setSemesterID(input("Please enter new semester Id"))
                 updateallstudentcourse(returncourse(courseid))
@@ -742,7 +745,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
             if temp == "5":
                 returncourse(courseid).setSemesterName(input("Please enter new semester name (Either Fall or Spring)"))
                 updateallstudentcourse(returncourse(courseid))
@@ -752,7 +755,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
                 
             if temp == "6":
                 returncourse(courseid).setDate(input("Please enter new dates in mtwrf format"))
@@ -763,7 +766,7 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
             if temp == "7":
                 returncourse(courseid).setTime(input("Please enter new starttime"))
                 updateallstudentcourse(returncourse(courseid))
@@ -773,12 +776,12 @@ def courseeditmenu(courseid=""):
                     2. No
                     """)
                 if input("") == "1":
-                    courseeditmenu(courseid)
+                    courseeditmenu(queue,courseid)
                 
             if temp == "8":
                 classesmenu()
     else:
-        courseeditmenu(courseid)
+        courseeditmenu(queue,courseid)
     
     
 
