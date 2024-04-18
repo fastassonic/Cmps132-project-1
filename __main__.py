@@ -212,9 +212,9 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
     else:
         key=str(1)
     coursesdict.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
-    if(semesterName=="Fall"):
+    if(semesterName.lower()=="fall"):
         fallcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
-    elif(semesterName=="Spring"):
+    elif(semesterName.lower()=="spring"):
         springcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
     else:
         print("Invalid Semester Name")
@@ -232,6 +232,10 @@ def del_course(courseid):
     for i in returncourse(str(courseid)).getStudentList():
         i.DropCourse(returncourse(str(courseid)))
     coursesdict.remove(returncourse(str(courseid)))
+    if(returncourse(str(courseid)).getSemesterName.lower()=="spring"):
+        springcourses.remove(returncourse(str(courseid)))
+    elif(returncourse(str(courseid)).getSemesterName.lower()=="fall"):
+        fallcourses.remove(returncourse(str(courseid)))
 
 
     
@@ -588,7 +592,7 @@ def classesmenu():
             instructorid = dict_selector(Instructordict,["undefined"],True)
             if instructorid.lower() != "back":
                 instructor = Instructordict[instructorid]
-                add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name: "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
+                add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name (either Spring or Fall): "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
                 printallcoursesdetails()
         if temp == "2":
             courseid = course_selector(coursesdict,allowback=True)
