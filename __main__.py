@@ -835,6 +835,17 @@ add_instructor(Fallinstructor,"Walter White","walterwhite@gmail.com","322-343-34
 add_student(Studentstack,"Janie bill","Janie@janie.com","123-456-7890","Cmpsc","12/19/1")
 add_student(Studentstack,"Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Cmpsc","09/24/84")
 add_student(Studentstack,"Student McStudentface","student@student.com","1","Cmpsc","02/02/02")
+add_student(Studentstack,"Doug Douglasson", "doug@doug.com","333","Cmpsc,","03/03/03")
+add_student(Studentstack,"Steve Dingle", "steve@school.com","234","Cmpsc,","03/01/03")
+add_student(Studentstack,"Joe Smithon", "joe@gmail.com","8","Cmpsc,","01/03/03")
+add_student(Studentstack,"Jimbus Robnan", "jimble@gmail.com","50000000000","Cmpsc,","01/01/03")
+add_student(Studentstack,"rob", "robert@doug.com","2234343434","Cmpsc,","03/03/06")
+add_student(Studentstack,"Joseph Mother", "joe@joeseph.com","3","Cmpsc,","09/03/03")
+add_student(Studentstack,"Doug Douglasson 2", "doug2@doug.com","3332","Cmpsc,","03/08/03")
+
+add_course("Physics 211",Instructordict["1"],"Here","123","Fall","MWF","12pm")
+add_course("English 15",Instructordict["2"],"Also here","232","Spring","MWF","10am")
+add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
 
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
