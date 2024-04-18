@@ -1,6 +1,6 @@
 class Courses:
     #TODO gonna suck but we need to add date and time to this.... augh
-    def __init__(self,id,name,instructor,location,semesterID,semesterName,studentList,dates,time):
+    def __init__(self,id,name,instructor,location,semesterID,semesterName,studentList,dates,time,department = None,degree=None):
         self._id=id
         self._name=name
         self._instructor=instructor
@@ -10,6 +10,8 @@ class Courses:
         self._studentList=studentList
         self._dates = dates
         self._time = time
+        self._department = department
+        self._degree = degree
     def getClassID(self):
         return self._id
     #changed for the purpose of dict selector
@@ -26,7 +28,15 @@ class Courses:
     def getDate(self):
         return self._dates
     def getTime(self):
-        return self._time    
+        return self._time   
+    def getDepartment(self):
+        return self._department 
+    def getDegree(self):
+        return self._degree
+    def setDepartment(self,ndp):
+        self._department = ndp
+    def setDegree(self,ndg):
+        self._degree = ndg
     def setDate(self,newdate):
         self._dates = newdate
     def setTime(self,newtime):

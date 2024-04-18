@@ -204,9 +204,9 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
         print("Given undefined instructor command. Assuming you have yet to build the teacher for this class.")
         instructorid = ""
     if len(coursesdict) >= 1:
-        key=len(coursesdict)+1
+        key=str(int(coursesdict[-1].getClassID())+1)
     else:
-        key=1
+        key=str(1)
     coursesdict.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
 
 
@@ -217,23 +217,25 @@ def changer_instructor_for_class(course,instructor):
     instructor.AddCourse(course)
     course.setInstructor(instructor.get_id())
     for i in course.getStudentList():
-        returnstudent(i).returncourse(course.getClassID()).setInstructor(instructor.get_id())
+        i.returncourse(course.getClassID()).setInstructor(instructor.get_id())
     
 def del_course(courseid):
+    for i in returncourse(str(courseid)).getStudentList():
+        i.DropCourse(returncourse(str(courseid)))
     coursesdict.remove(returncourse(str(courseid)))
 
     
 def add_student_to_course(course,student):
     print(course)
-    student.AddCourse(coursesdict[course])
-    coursesdict[course].AddTooStudentList(student.get_id())
+    student.AddCourse(course)
+    course.AddTooStudentList(student)
 def del_student_from_course(course,student):
     student.DropCourse(course)
     course.removefromstudentlist(student.get_id())
 
 def updateallstudentcourse(course):
     for i in course.getStudentList():
-        returnstudent(i).updatecourse(course)
+        i.updatecourse(course)
         
     
     
@@ -257,19 +259,19 @@ def printallstudentdetails():
 #menu functions 
 
 def mainmenu():
-    menudict = {"1":studentmenu,"2":instructorsmenu,"3":classesmenu}
+    menudict = {"1":studentmenu,"2":instructorsmenu,"3":classesmenu,"4":collegemenu}
     print("""
           Welcome to the penn state beaver student lead Student management system
           (Note Students are not responsible for any \"Accidental Penn testing that occurs in this system\")
           1. Students 
           2. Instructors
           3. Classes
-          4. Finished
+          4. College Menu
           """)
     temp = input("Please select out of the possible options")
-    if temp in ["1","2","3","4"]: 
+    if temp in ["1","2","3","4","5"]: 
         print("Good boy!")
-        if temp == "4":
+        if temp == "5":
             print("Bye bye")
             return True
         else:
@@ -354,7 +356,7 @@ def studentclassmenu(editingid=""):
         if temp in ["1","2","3","4","5"]:
             if temp == "1":
                 print("Toggled one")
-                tempcourse = course_selector(coursesdict)
+                tempcourse = returncourse(course_selector(coursesdict))
                 print(f"Tempcourse is {tempcourse}")
                 add_student_to_course(tempcourse,returnstudent(editingid))
             if temp == "2":
@@ -689,8 +691,91 @@ def courseeditmenu(courseid=""):
         courseeditmenu(courseid)
     
     
-    
+
+def collegemenu():
+    finished = False
+    while not finished:
+        print(f"""
+            Penn state Department directory
+            1. Add department 
+            2. Remove Department
+            3. Print all depertments
+            4. Navigate through department
+            5. Finished
+            """)
+        temp = input("Please select out of the possible options")
+        if temp in ["1","2","3","4","5"]: 
+            if temp == "1":
+                AddChild(college,input("Name of Department"))
+            if temp == "2":
+                delnode = treechildselector(college,allowback=True)
+                if delnode != "Back":
+                    RemoveChild(college,returnchild(college,delnode))
+            if temp == "3":
+                printallchildvalues(college)
+            if temp == "4":
+                departmentmenu(returnchild(college,int(treechildselector(college))))
+                
+            if temp == "5":
+                finished = True
+                
             
+def departmentmenu(node):
+    finished = False
+    while not finished:
+        print(f"""
+            {node.value} directory
+            1. Add degree 
+            2. Remove degree
+            3. Print all degree
+            4. Navigate through degree
+            5. Back
+            """)
+        temp = input("Please select out of the possible options")
+        if temp in ["1","2","3","4","5"]: 
+            if temp == "1":
+                AddChild(node,input("Name of Department"))
+            if temp == "2":
+                delnode = treechildselector(node,allowback=True)
+                if delnode != "Back":
+                    RemoveChild(node,returnchild(node,delnode))
+            if temp == "3":
+                printallchildvalues(node)
+            if temp == "4":
+                degreemenu(returnchild(node,int(treechildselector(node))))
+            if temp == "5":
+                print("Should be finished?")
+                finished = True
+
+def degreemenu(node):
+    finished = False
+    while not finished:
+        print(f"""
+            {node.value} directory
+            1. Add Semester 
+            2. Remove Semester
+            3. Print all Semesters
+            4. Navigate through Semester
+            5. Back
+            """)
+        temp = input("Please select out of the possible options")
+        if temp in ["1","2","3","4"]: 
+            if temp == "1":
+                AddChild(node,input("Name of Semester"))
+            if temp == "2":
+                delnode = treechildselector(node,allowback=True)
+                if delnode != "Back":
+                    RemoveChild(node,returnchild(node,delnode))
+            if temp == "3":
+                printallchildvalues(node)
+            if temp == "4":
+                print("Implement this")
+            if temp == "5":
+                finished = False
+    
+
+            
+
 
 #Demo students/instructors/courses
 add_instructor("Jane doe","Jane@john.com","123-498-1087","Physics",[],True)
@@ -705,8 +790,6 @@ add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2
 
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
-print(f"{returnchild(college,int(treechildselector(college))).value} was selected")
-
 AddChild(college,"General Education")
 printallchildvalues(college)
 

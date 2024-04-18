@@ -22,7 +22,8 @@ class student(human):
     def AddCourse(self,course):
         self.__courses[str(course.getClassID())] = StudentCourse(course.get_name(),str(course.getClassID()),course.getInstructor(),course.getLocation(),course.getSemesterID(),course.getSemesterName(),course.getStudentList(),100,course.getDate(),course.getTime())
     def DropCourse(self,course):
-        if str(course.getClassID()) in self.__courses.keys():
+        print(self.__courses.keys())
+        if str(course.getClassID()) in str(self.__courses.keys()):
             del self.__courses[course.getClassID()]
         else:
             print("No class found for {course.getcourseid()}")
