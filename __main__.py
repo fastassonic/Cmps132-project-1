@@ -829,15 +829,12 @@ def departmentmenu(node):
 
 
 #Demo students/instructors/courses
-add_instructor("Jane doe","Jane@john.com","123-498-1087","Physics",[],True)
-add_instructor("John doe","John@john.com","123-498-1087","English",[],True)
-add_instructor("Walter White","walterwhite@gmail.com","322-343-3422","Chemistry",[],True)
+add_instructor(Fallinstructor,"Jane doe","Jane@john.com","123-498-1087","Physics",[],True)
+add_instructor(Fallinstructor,"John doe","John@john.com","123-498-1087","English",[],True)
+add_instructor(Fallinstructor,"Walter White","walterwhite@gmail.com","322-343-3422","Chemistry",[],True)
 add_student(Studentstack,"Janie bill","Janie@janie.com","123-456-7890","Cmpsc","12/19/1")
 add_student(Studentstack,"Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Cmpsc","09/24/84")
 add_student(Studentstack,"Student McStudentface","student@student.com","1","Cmpsc","02/02/02")
-add_course("Physics 211",Instructordict["1"],"Here","123","Fall","MWF","12pm")
-add_course("English 15",Instructordict["2"],"Also here","232","Spring","MWF","10am")
-add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
 
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
