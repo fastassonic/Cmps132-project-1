@@ -5,6 +5,8 @@ from queue import LifoQueue
 from collections import deque
 from Tree import TreeNode
 from queue import Queue
+#Not necessary but funny
+import random
 #Global declerations
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
 debug = False
@@ -877,6 +879,7 @@ add_course("Chemistry 101",returninstrucotr(Fallinstructor,"3"),"Not here","555"
 add_course("Cmpsc 132",returninstrucotr(Fallinstructor,"4"),"Here","Number","Fall","Now","Now")
 for i in range(1,11):
     add_student_to_course(returncourse("4"),returnstudent(Studentstack,str(i)))
+    returnstudent(Studentstack,str(i)).gradechange("4",[random.randint(0,100),random.randint(0,100),random.randint(0,100)])
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
 AddChild(college,"General Education")
