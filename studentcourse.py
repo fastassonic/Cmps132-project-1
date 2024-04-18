@@ -4,7 +4,11 @@ class StudentCourse(Courses):
         super().__init__(id,name,instructor,location,semesterID,semestername,studentList,dates,time)
         self._grade=grade
     def getGrade(self):
-        return self._grade
+        total=0
+        for i in self._grade:
+            total+=i
+        total/=len(self._grade)
+        return "Quiz Grades: "+self._grade+"\nTotal Grade: "+(str)(total)
     def setGrade(self,newgrade):
         self._grade=newgrade
     def displayinfo(self):

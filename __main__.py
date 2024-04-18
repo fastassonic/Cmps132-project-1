@@ -462,7 +462,7 @@ def studentclassmenu(stack,editingid=""):
                     tempgrade = ""
                     while not tempgrade.isnumeric():
                         try:
-                            tempgrade = input("Enter in the new grade")
+                            tempgrade = [input("Enter in the new quiz 1 grade"),input("Enter in the new quiz 2 grade"),input("Enter in the new quiz 3 grade")]
                         except:
                             tempgrade = ""
                     returnstudent(stack,editingid).gradechange(coursesid,int(tempgrade))
