@@ -4,10 +4,12 @@ from student import student
 from queue import LifoQueue
 from collections import deque
 from Tree import TreeNode
+from queue import Queue
 #Global declerations
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
 debug = False
-Instructordict = {}
+Fallinstructor = Queue()
+Springinstructor = Queue()
 coursesdict = deque()
 fallcourses=deque()
 springcourses=deque()
@@ -95,8 +97,8 @@ def stack_selector(tempstack,customopt = None,allowback=False):
         customopt = []
     templist = []
     idlist = []
-    while not Studentstack.empty():
-        tempobj = Studentstack.get()
+    while not tempstack.empty():
+        tempobj = tempstack.get()
         print(f"{tempobj.get_id()}:{tempobj.get_name()}")
         templist.append(tempobj)
         idlist.append(str(tempobj.get_id()))
@@ -107,11 +109,33 @@ def stack_selector(tempstack,customopt = None,allowback=False):
         print("Enter \"Back\" to return to the previous menu")
     temp = input("please select one of the options: ")
     for i in templist:
-        Studentstack.put(i)
+        tempstack.put(i)
     if temp in idlist or temp in customopt or (temp.lower() == "back" and allowback):
         return temp
     else:
         return stack_selector(tempstack,customopt,allowback)
+
+def queue_selector(tempstack,customopt = None,allowback=False):
+    if customopt == None:
+        customopt = []
+    templist = []
+    idlist = []
+    while not tempstack.empty():
+        tempobj = tempstack.get()
+        print(f"{tempobj.get_id()}:{tempobj.get_name()}")
+        templist.append(tempobj)
+        idlist.append(str(tempobj.get_id()))
+    for i in customopt:
+        print(f"Other options: {i}")
+    if allowback:
+        print("Enter \"Back\" to return to the previous menu")
+    temp = input("please select one of the options: ")
+    for i in templist:
+        tempstack.put(i)
+    if temp in idlist or temp in customopt or (temp.lower() == "back" and allowback):
+        return temp
+    else:
+        return queue_selector(tempstack,customopt,allowback)
 
 def course_selector(tempcourses,customopt = None,allowback=False):
     if customopt == None:
@@ -129,21 +153,28 @@ def course_selector(tempcourses,customopt = None,allowback=False):
         return str(temp)
     else:
         return course_selector(tempcourses,customopt,allowback)
-def add_instructor(name,email,contact,degree,courses=None,debug=False): 
+def add_instructor(stack,name,email,contact,degree,courses=None,debug=False): 
     if courses == None:
         courses = list()
-    if len(Instructordict) >= 1:
-        key = str(int(list(Instructordict.keys())[-1]) + 1 )
+    if stack.qsize >= 1:
+        templist = []
+        while not stack.empty():
+            templist.append(stack.pop())
+        key = str(int(templist[-1].get_id()) +1)
+        for i in templist:
+            stack.put(i)
     else:
         key = "1"
-    Instructordict[key] = instructor(key,name,email,contact,degree,courses,debug)
-    return key
+    stack.put(instructor(key,name,email,contact,degree,courses,debug))
+    return instructor(key,name,email,contact,degree,courses,debug)
 
 def add_student(stack,name,email,contact,major,dob,courses = None):
     if courses == None:
         courses = {}
     if stack.qsize() >= 1:
-        key = stack.qsize() + 1 
+        temp = stack.get()
+        key = str(int(temp.get_id()) + 1)
+        stack.put(temp)
     else:
         key = "1"
     stack.put(student(key,name,email,contact,major,dob,courses))
@@ -174,7 +205,24 @@ def returnstudent(stack,id):
     else:
         return None
         
-
+def returninstrucotr(queue,id):
+    templist = []
+    found = False 
+    foundobj = None
+    while queue.qsize() > 0:
+        returnobj = queue.get()
+        if debug:
+            print(returnobj.get_id())
+        if str(returnobj.get_id()) == str(id):
+            foundobj = returnobj
+            found = True
+        templist.append(returnobj)
+    for i in templist:
+        queue.put(i)
+    if found:
+        return foundobj
+    else:
+        return None
 
 def remove_student(stack,id):
     foundstudent = returnstudent(id)
@@ -182,7 +230,7 @@ def remove_student(stack,id):
         for i in foundstudent.returncourselist():
             coursesdict[i].removefromstudentlist(id)
         templist = []
-        while not Studentstack.empty():
+        while not stack.empty():
             tempobj = stack.get()
             if tempobj.get_id() != id:
                 templist.append(tempobj)
@@ -191,9 +239,18 @@ def remove_student(stack,id):
             stack.put(i)
         if debug:
             printallcoursesdetails()
-def remove_instructor(id):
-    del Instructordict[id]
-    printallinstructorsdetails()
+def remove_instructor(queue,id):
+    templist = []
+    while queue.qsize() > 0:
+        returnobj = queue.get()
+        if debug:
+            print(returnobj.get_id())
+        if not( str(returnobj.get_id()) == str(id)):
+            templist.append(returnobj)
+    for i in templist:
+        queue.put(i)
+
+
 def add_course(name,instructor,location,semesterID,semesterName,date,time,studentList=None):
     #Note, python is awkward. This is to prevent list sharing, hence why studentlist != [] initially
     if studentList == None: 
@@ -222,11 +279,10 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
     #TODO talk to max about how to implement this
-    Instructordict[course.getInstructor()].DropCourse(course)
+    course.getInstructor().DropCourse(course)
     instructor.AddCourse(course)
-    course.setInstructor(instructor.get_id())
-    for i in course.getStudentList():
-        i.returncourse(course.getClassID()).setInstructor(instructor.get_id())
+    course.setInstructor(instructor)
+    updateallstudentcourse(course)
     
 def del_course(courseid):
     for i in returncourse(str(courseid)).getStudentList():
@@ -254,6 +310,7 @@ def updateallstudentcourse(course):
     
     
 def printallinstructorsdetails():
+    #TODO, FIX THIS
     for i in Instructordict.keys():
         print(Instructordict[i].displayinstructorinfo(coursesdict))
 
@@ -466,7 +523,7 @@ def studenteditmenu(stack,editingid=""):
                 studentmenu()
         else:
             studenteditmenu(stack,editingid)
-def instructorsmenu():
+def instructorsmenu(queue = Fallinstructor):
     print("""
           Instructor submenu
           1. Add instructor 
@@ -480,7 +537,7 @@ def instructorsmenu():
         if temp=="1":
             print("Adding Instructor")
             tempid = add_instructor(input("Instructor's name?: "), input("Instructor's Email?: "), input("Instructor's contact?: "),input("Instructor's degree?: "))
-            print(Instructordict[tempid].displayinstructorinfo(coursesdict))
+            print(tempid)
             print(""" 
                 Would you like to resume?
                 1. Yes
@@ -489,8 +546,8 @@ def instructorsmenu():
             if input("") == "1":
                 instructorsmenu()
         if temp == "2":
-            if len(Instructordict) > 1:
-                tempid = dict_selector(Instructordict, allowback=True)
+            if queue.qsize() > 1:
+                tempid = queue_selector(queue,allowback=True)
                 if tempid.lower() != "back":
                     remove_instructor(tempid)
             else:
@@ -503,16 +560,16 @@ def instructorsmenu():
             if input("") == "1":
                     instructorsmenu()
         if temp == "3":
-            instructoreditmenu()
+            instructoreditmenu(queue)
         if temp == "4":
-            tempid = dict_selector(Instructordict, ["all"], allowback=True)
+            tempid = queue_selector(queue,allowback=True)
 
             if tempid.lower() == "all":
                 printallinstructorsdetails()
             elif tempid.lower() == "back":
                 return ()
             else:
-                print(Instructordict[tempid].displayinstructorinfo(coursesdict))
+                print(returninstrucotr(queue,tempid).displayinstructorinfo(coursesdict))
         if temp == "5":
             mainmenu()
     else:
@@ -520,9 +577,9 @@ def instructorsmenu():
         instructorsmenu()
 
 
-def instructoreditmenu(editingid=""):
+def instructoreditmenu(queue,editingid=""):
     if editingid == "":
-        editingid = dict_selector(Instructordict, allowback=True)
+        editingid = queue_selector(queue,allowback=True)
     if editingid.lower() != "back":
         print(""" 
             Instructor editing submenu:
@@ -535,46 +592,46 @@ def instructoreditmenu(editingid=""):
         temp = input("Please select out of the possible option ")
         if temp in ["1", "2", "3", "4", "5"]:
             if temp == "1":
-                Instructordict[editingid].set_name(input("Please enter new name: "))
-                print(Instructordict[editingid].get_name())
+                returninstrucotr(queue,editingid).set_name(input("Please enter new name: "))
+                print(returninstrucotr(queue,editingid).get_name())
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    instructoreditmenu(editingid)
+                    instructoreditmenu(queue,editingid)
             if temp == "2":
-                Instructordict[editingid].set_email(input("Please enter new email: "))
+                returninstrucotr(queue,editingid).set_email(input("Please enter new email: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    instructoreditmenu(editingid)
+                    instructoreditmenu(queue,editingid)
             if temp == "3":
-                Instructordict[editingid].set_contact(input("Please enter new contact details: "))
+                returninstrucotr(queue,editingid).set_contact(input("Please enter new contact details: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    instructoreditmenu(editingid)
+                    instructoreditmenu(queue,editingid)
             if temp == "4":
-                Instructordict[editingid].set_degree(input("Please enter new degree: "))
+                returninstrucotr(queue,editingid).set_degree(input("Please enter new degree: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    instructoreditmenu(editingid)
+                    instructoreditmenu(queue,editingid)
             if temp == "5":
                 instructorsmenu()
         else:
-            instructoreditmenu(editingid)
+            instructoreditmenu(queue,editingid)
 def classesmenu():
     print("""
           Courses submenu
