@@ -19,6 +19,14 @@ college = TreeNode("College")
 
 
 
+def optionselector(tempdict):
+    for i in tempdict.keys():
+        print(f"{i}:{tempdict[i].get_name()}")
+    temp = input("please select one of the options: ")
+    if temp in tempdict.keys():
+        return tempdict[temp]
+    else:
+        return dict_selector(tempdict)
 
 def AddChild(node,name):
     allreadythere = False
@@ -309,10 +317,15 @@ def updateallstudentcourse(course):
         
     
     
-def printallinstructorsdetails():
-    #TODO, FIX THIS
-    for i in Instructordict.keys():
-        print(Instructordict[i].displayinstructorinfo(coursesdict))
+def printallinstructorsdetails(queue):
+    templist = []
+    while not queue.empty():
+        tempobj = queue.get()
+        tempobj.displayinstructorinfo()
+        templist.append(tempobj)
+    for i in templist:
+       queue.put(i)
+#menu functions 
 
 def printallcoursesdetails():
     print("\nFall Courses: \n")
@@ -646,9 +659,10 @@ def classesmenu():
     if temp in ["1","2","3","4","5"]:
         if temp == "1":
             print("Instructor selection")
-            instructorid = dict_selector(Instructordict,["undefined"],True)
+            tempqueue = optionselector({"Spring Instructor":Springinstructor,"Fall Instructor":Fallinstructor})
+            instructorid = queue_selector(tempqueue,["undefined"],True)
             if instructorid.lower() != "back":
-                instructor = Instructordict[instructorid]
+                instructor = returninstrucotr(tempqueue,instructorid)
                 add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name (either Spring or Fall): "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
                 printallcoursesdetails()
         if temp == "2":
@@ -698,8 +712,9 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "2":
-                instructorid = dict_selector(Instructordict)
-                changer_instructor_for_class(returncourse(courseid),Instructordict[instructorid])
+                tempqueue = optionselector({"Spring Instructor":Springinstructor,"Fall Instructor":Fallinstructor})
+                instructorid = queue_selector(tempqueue)
+                changer_instructor_for_class(returncourse(courseid),returninstrucotr(tempqueue,instructorid))
                 
                 print(""" 
                     Would you like to resume editing?
@@ -843,9 +858,9 @@ add_student(Studentstack,"rob", "robert@doug.com","2234343434","Cmpsc,","03/03/0
 add_student(Studentstack,"Joseph Mother", "joe@joeseph.com","3","Cmpsc,","09/03/03")
 add_student(Studentstack,"Doug Douglasson 2", "doug2@doug.com","3332","Cmpsc,","03/08/03")
 
-add_course("Physics 211",Instructordict["1"],"Here","123","Fall","MWF","12pm")
-add_course("English 15",Instructordict["2"],"Also here","232","Spring","MWF","10am")
-add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
+add_course("Physics 211",returninstrucotr(Fallinstructor,"1"),"Here","123","Fall","MWF","12pm")
+add_course("English 15",returninstrucotr(Fallinstructor,"2"),"Also here","232","Spring","MWF","10am")
+add_course("Chemistry 101",returninstrucotr(Fallinstructor,"3"),"Not here","555","Fall","MTWF","2pm")
 
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
