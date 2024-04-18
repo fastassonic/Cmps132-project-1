@@ -20,11 +20,13 @@ college = TreeNode("College")
 
 
 def optionselector(tempdict):
+    index = 0
     for i in tempdict.keys():
-        print(f"{i}")
+        print(f"{index}:{i}")
+        index += 1
     temp = input("please select one of the options: ")
-    if temp in tempdict.keys():
-        return tempdict[temp]
+    if int(temp) < len(tempdict.keys()):
+        return tempdict[list(tempdict.keys())[int(temp)]]
     else:
         return optionselector(tempdict)
 
