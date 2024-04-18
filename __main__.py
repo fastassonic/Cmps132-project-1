@@ -4,7 +4,7 @@ from student import student
 from queue import LifoQueue
 #Global declerations
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
-debug = True 
+debug = False
 Instructordict = {}
 Studentstack = LifoQueue()
 coursesdict = {}
@@ -90,7 +90,7 @@ def returnstudent(id):
 
 
 def remove_student(id):
-    foundstudent = returnstudent()
+    foundstudent = returnstudent(id)
     if foundstudent !=None:
         for i in foundstudent.returncourselist():
             coursesdict[i].removefromstudentlist(id)
@@ -100,9 +100,10 @@ def remove_student(id):
             if tempobj.get_id() != id:
                 templist.append(tempobj)
         templist.reverse()
-        for i in templist():
+        for i in templist:
             Studentstack.put(i)
-        printallcoursesdetails()
+        if debug:
+            printallcoursesdetails()
 def remove_instructor(id):
     del Instructordict[id]
     printallinstructorsdetails()
