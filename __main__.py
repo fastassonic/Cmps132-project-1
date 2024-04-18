@@ -9,6 +9,8 @@ from Tree import TreeNode
 debug = False
 Instructordict = {}
 coursesdict = deque()
+fallcourses=deque()
+springcourses=deque()
 Finished = False
 Studentstack = LifoQueue()
 college = TreeNode("College")
@@ -210,7 +212,12 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
     else:
         key=str(1)
     coursesdict.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
-
+    if(semesterName=="Fall"):
+        fallcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+    elif(semesterName=="Spring"):
+        springcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+    else:
+        print("Invalid Semester Name")
 
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
@@ -225,6 +232,7 @@ def del_course(courseid):
     for i in returncourse(str(courseid)).getStudentList():
         i.DropCourse(returncourse(str(courseid)))
     coursesdict.remove(returncourse(str(courseid)))
+
 
     
 def add_student_to_course(course,student):
@@ -246,8 +254,12 @@ def printallinstructorsdetails():
         print(Instructordict[i].displayinstructorinfo(coursesdict))
 
 def printallcoursesdetails():
-    for i in range(len(coursesdict)):
-        print(coursesdict[i].displayinfo())
+    print("\nFall Courses: \n")
+    for i in range(len(fallcourses)):
+        print(fallcourses[i].displayinfo())
+    print("\nSpring Courses: \n")
+    for i in range(len(springcourses)):
+        print(springcourses[i].displayinfo())
 
 def printallstudentdetails(stack):
     templist = []
@@ -606,8 +618,8 @@ def courseeditmenu(courseid=""):
             1. Change name
             2. Change instructor
             3. Change location 
-            4. Change semesterid
-            5. Change semestername
+            4. Change semester id
+            5. Change semester name
             6. Change date
             7. Change time
             8. Back
@@ -656,7 +668,7 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "5":
-                returncourse(courseid).setSemesterName(input("Please enter new semester name"))
+                returncourse(courseid).setSemesterName(input("Please enter new semester name (Either Fall or Spring)"))
                 updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
@@ -762,8 +774,8 @@ add_instructor("Walter White","walterwhite@gmail.com","322-343-3422","Chemistry"
 add_student(Studentstack,"Janie bill","Janie@janie.com","123-456-7890","Cmpsc","12/19/1")
 add_student(Studentstack,"Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Cmpsc","09/24/84")
 add_student(Studentstack,"Student McStudentface","student@student.com","1","Cmpsc","02/02/02")
-add_course("Physics 211",Instructordict["1"],"Here","123","Summer","MWF","12pm")
-add_course("English 15",Instructordict["2"],"Also here","232","Winter","MWF","10am")
+add_course("Physics 211",Instructordict["1"],"Here","123","Fall","MWF","12pm")
+add_course("English 15",Instructordict["2"],"Also here","232","Spring","MWF","10am")
 add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
 
 AddChild(college,"College of Enginering")
