@@ -8,10 +8,9 @@ from Tree import TreeNode
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
 debug = False
 Instructordict = {}
-Studentstack = LifoQueue()
 coursesdict = deque()
 Finished = False
-
+Studentstack = LifoQueue()
 college = TreeNode("College")
 
 
@@ -23,7 +22,10 @@ def AddChild(node,name):
         if i.value == name:
             allreadythere = True
     if not (allreadythere):
-        node.add_child(TreeNode(name))
+        returnnode = TreeNode(name)
+        node.add_child(returnnode)
+        return returnnode
+        
     else:
         print("Department allready exists")
 
@@ -135,14 +137,14 @@ def add_instructor(name,email,contact,degree,courses=None,debug=False):
     Instructordict[key] = instructor(key,name,email,contact,degree,courses,debug)
     return key
 
-def add_student(name,email,contact,major,dob,courses = None):
+def add_student(stack,name,email,contact,major,dob,courses = None):
     if courses == None:
         courses = {}
-    if Studentstack.qsize() >= 1:
-        key = Studentstack.qsize() + 1 
+    if stack.qsize() >= 1:
+        key = stack.qsize() + 1 
     else:
         key = "1"
-    Studentstack.put(student(key,name,email,contact,major,dob,courses))
+    stack.put(student(key,name,email,contact,major,dob,courses))
     return key
 def returncourse(id):
     returnobj = None
@@ -151,12 +153,12 @@ def returncourse(id):
             returnobj = i
 
     return returnobj
-def returnstudent(id):
+def returnstudent(stack,id):
     print(f"id is {id}")
     templist = []
     found = False
-    while Studentstack.qsize() > 0 and not found:
-        returnobj = Studentstack.get()
+    while stack.qsize() > 0 and not found:
+        returnobj = stack.get()
         if debug:
             print(returnobj.get_id())
         if str(returnobj.get_id()) == str(id):
@@ -164,7 +166,7 @@ def returnstudent(id):
         templist.append(returnobj)
     templist.reverse()
     for i in templist:
-        Studentstack.put(i)
+        stack.put(i)
     if found:
         return returnobj
     else:
@@ -172,19 +174,19 @@ def returnstudent(id):
         
 
 
-def remove_student(id):
+def remove_student(stack,id):
     foundstudent = returnstudent(id)
     if foundstudent !=None:
         for i in foundstudent.returncourselist():
             coursesdict[i].removefromstudentlist(id)
         templist = []
         while not Studentstack.empty():
-            tempobj = Studentstack.get()
+            tempobj = stack.get()
             if tempobj.get_id() != id:
                 templist.append(tempobj)
         templist.reverse()
         for i in templist:
-            Studentstack.put(i)
+            stack.put(i)
         if debug:
             printallcoursesdetails()
 def remove_instructor(id):
@@ -247,26 +249,25 @@ def printallcoursesdetails():
     for i in range(len(coursesdict)):
         print(coursesdict[i].displayinfo())
 
-def printallstudentdetails():
+def printallstudentdetails(stack):
     templist = []
-    while not Studentstack.empty():
-        tempobj = Studentstack.get()
+    while not stack.empty():
+        tempobj = stack.get()
         print(tempobj.displayinfo())
         templist.append(tempobj)
     templist.reverse()
     for i in templist:
-        Studentstack.put(i)
+        stack.put(i)
 #menu functions 
 
 def mainmenu():
-    menudict = {"1":studentmenu,"2":instructorsmenu,"3":classesmenu,"4":collegemenu}
+    menudict = {"1":collegemenu,"2":instructorsmenu,"3":classesmenu}
     print("""
           Welcome to the penn state beaver student lead Student management system
           (Note Students are not responsible for any \"Accidental Penn testing that occurs in this system\")
           1. Students 
           2. Instructors
           3. Classes
-          4. College Menu
           """)
     temp = input("Please select out of the possible options")
     if temp in ["1","2","3","4","5"]: 
@@ -281,7 +282,8 @@ def mainmenu():
         print("Wow, a contrarian!")
         return False
 
-def studentmenu():
+def studentmenu(stack):
+    print(stack)
     print("""
           Student submenu 
           1. Add student 
@@ -296,20 +298,20 @@ def studentmenu():
         if temp == "1":
             #putting the args here to make it easier to write
             #name,email,contact,major,dob
-            tempid = add_student(input("Student name?: "),input("Student Email?: "),input("Student contact?: "),input("Student's major?: "),input("Student's DOB?: "))
+            tempid = add_student(stack,input("Student name?: "),input("Student Email?: "),input("Student contact?: "),input("Student's major?: "),input("Student's DOB?:"))
             print(""" 
                   Would you like to resume?
                   1. Yes
                   2. No
                   """)
             if input("") == "1":
-                studentmenu()
+                studentmenu(stack)
         if temp == "2":
-            if Studentstack.qsize() > 1:
+            if stack.qsize() > 1:
                 #TODO Dict_selector implementation
-                tempid = stack_selector(Studentstack,allowback=True)
+                tempid = stack_selector(stack,allowback=True)
                 if tempid.lower() != "back":
-                    remove_student(tempid)
+                    remove_student(stack,tempid)
             else:
                 print("Number of students would be reduced to 0 during this operation. Please create a new student before destroying the last one ")
             print(""" 
@@ -318,20 +320,20 @@ def studentmenu():
                   2. No
                   """)
             if input("") == "1":
-                studentmenu()
+                studentmenu(stack)
         if temp == "3":
-            studenteditmenu()
+            studenteditmenu(stack)
         if temp == "4":
             #TODO Dict_selector implementation
-            tempid = stack_selector(Studentstack,["all"],allowback=True)
+            tempid = stack_selector(stack,["all"],allowback=True)
             if tempid.lower() == "all":
-                printallstudentdetails()
+                printallstudentdetails(stack)
             elif tempid.lower() == "back":
                 return()
             else:
-                print(returnstudent(tempid).displayinfo())
+                print(returnstudent(stack,tempid).displayinfo())
         if temp == "5":
-            studentclassmenu()
+            studentclassmenu(stack)
         if temp=="6":
             mainmenu()
     else:
@@ -339,10 +341,10 @@ def studentmenu():
         studentmenu()
         
 
-def studentclassmenu(editingid=""):
+def studentclassmenu(stack,editingid=""):
     if editingid == "":
         #TODO Dict_selector implementation
-        editingid = stack_selector(Studentstack,allowback=True)
+        editingid = stack_selector(stack,allowback=True)
     if editingid.lower() != "back":
         print("""
             Student Classes submenu
@@ -358,15 +360,15 @@ def studentclassmenu(editingid=""):
                 print("Toggled one")
                 tempcourse = returncourse(course_selector(coursesdict))
                 print(f"Tempcourse is {tempcourse}")
-                add_student_to_course(tempcourse,returnstudent(editingid))
+                add_student_to_course(tempcourse,returnstudent(stack,editingid))
             if temp == "2":
-                tempcourse = coursesdict[dict_selector(returnstudent(editingid).returncourselist())]
-                del_student_from_course(tempcourse,returnstudent(editingid))
+                tempcourse = coursesdict[dict_selector(returnstudent(stack,editingid).returncourselist())]
+                del_student_from_course(tempcourse,returnstudent(stack,editingid))
             if temp == "3":
-                for i in returnstudent(editingid).returncourselist():
+                for i in returnstudent(stack,editingid).returncourselist():
                     i.displayinfo()
             if temp == "4":
-                coursesid = dict_selector(returnstudent(editingid).returncourselist(),allowback=True)
+                coursesid = dict_selector(returnstudent(stack,editingid).returncourselist(),allowback=True)
                 if coursesid.lower() != "back":
                     tempgrade = ""
                     while not tempgrade.isnumeric():
@@ -374,16 +376,16 @@ def studentclassmenu(editingid=""):
                             tempgrade = input("Enter in the new grade")
                         except:
                             tempgrade = ""
-                    returnstudent(editingid).gradechange(coursesid,int(tempgrade))
+                    returnstudent(stack,editingid).gradechange(coursesid,int(tempgrade))
             if temp == "5":
-                studentmenu()
+                studentmenu(stack)
     else:
-        studentmenu()    
+        studentmenu(stack)    
             
     
-def studenteditmenu(editingid=""):
+def studenteditmenu(stack,editingid=""):
     if editingid == "":
-        editingid = stack_selector(Studentstack,allowback=True)
+        editingid = stack_selector(stack,allowback=True)
         #print(editingid)
     if editingid.lower() != "back":
         print(""" 
@@ -398,56 +400,56 @@ def studenteditmenu(editingid=""):
         temp = input("Please select out of the possible option ")
         if temp in ["1","2","3","4","5","6"]:
             if temp == "1":
-                returnstudent(editingid).set_name(input("Please enter new name: "))
-                print(returnstudent(editingid).get_name())
+                returnstudent(stack,editingid).set_name(input("Please enter new name: "))
+                print(returnstudent(stack,editingid).get_name())
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    studenteditmenu(editingid)
+                    studenteditmenu(stack,editingid)
             if temp == "2":
-                returnstudent(editingid).set_email(input("Please enter new email: "))
+                returnstudent(stack,editingid).set_email(input("Please enter new email: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    studenteditmenu(editingid)
+                    studenteditmenu(stack,editingid)
             if temp == "3":
-                returnstudent(editingid).set_contact(input("Please enter new contact details: "))
+                returnstudent(stack,editingid).set_contact(input("Please enter new contact details: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    studenteditmenu(editingid)
+                    studenteditmenu(stack,editingid)
             if temp == "4":
-                returnstudent(editingid).setMajor(input("Please enter new major: "))
+                returnstudent(stack,editingid).setMajor(input("Please enter new major: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    studenteditmenu(editingid)
+                    studenteditmenu(stack,editingid)
             if temp == "5":
-                returnstudent(editingid).setDOB(input("Please enter new DOB: "))
+                returnstudent(stack,editingid).setDOB(input("Please enter new DOB: "))
                 print(""" 
                     Would you like to resume?
                     1. Yes
                     2. No
                     """)
                 if input("") == "1":
-                    studenteditmenu(editingid)
+                    studenteditmenu(stack,editingid)
                 
             if temp == "6":
                 studentmenu()
         else:
-            studenteditmenu(editingid)
+            studenteditmenu(stack,editingid)
 def instructorsmenu():
     print("""
           Instructor submenu
@@ -734,7 +736,8 @@ def departmentmenu(node):
         temp = input("Please select out of the possible options")
         if temp in ["1","2","3","4","5"]: 
             if temp == "1":
-                AddChild(node,input("Name of Department"))
+                tempnode = AddChild(node,input("Name of Department"))
+                AddChild(tempnode,LifoQueue())
             if temp == "2":
                 delnode = treechildselector(node,allowback=True)
                 if delnode != "Back":
@@ -742,36 +745,11 @@ def departmentmenu(node):
             if temp == "3":
                 printallchildvalues(node)
             if temp == "4":
-                degreemenu(returnchild(node,int(treechildselector(node))))
+                studentmenu(returnchild(node,int(treechildselector(node=node))).children[0].value)
+                
             if temp == "5":
                 print("Should be finished?")
                 finished = True
-
-def degreemenu(node):
-    finished = False
-    while not finished:
-        print(f"""
-            {node.value} directory
-            1. Add Semester 
-            2. Remove Semester
-            3. Print all Semesters
-            4. Navigate through Semester
-            5. Back
-            """)
-        temp = input("Please select out of the possible options")
-        if temp in ["1","2","3","4"]: 
-            if temp == "1":
-                AddChild(node,input("Name of Semester"))
-            if temp == "2":
-                delnode = treechildselector(node,allowback=True)
-                if delnode != "Back":
-                    RemoveChild(node,returnchild(node,delnode))
-            if temp == "3":
-                printallchildvalues(node)
-            if temp == "4":
-                print("Implement this")
-            if temp == "5":
-                finished = False
     
 
             
@@ -781,9 +759,9 @@ def degreemenu(node):
 add_instructor("Jane doe","Jane@john.com","123-498-1087","Physics",[],True)
 add_instructor("John doe","John@john.com","123-498-1087","English",[],True)
 add_instructor("Walter White","walterwhite@gmail.com","322-343-3422","Chemistry",[],True)
-add_student("Janie bill","Janie@janie.com","123-456-7890","Computer Science","12/19/1")
-add_student("Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Chemistry","09/24/84")
-add_student("Student McStudentface","student@student.com","1","Student Studies","02/02/02")
+add_student(Studentstack,"Janie bill","Janie@janie.com","123-456-7890","Cmpsc","12/19/1")
+add_student(Studentstack,"Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Cmpsc","09/24/84")
+add_student(Studentstack,"Student McStudentface","student@student.com","1","Cmpsc","02/02/02")
 add_course("Physics 211",Instructordict["1"],"Here","123","Summer","MWF","12pm")
 add_course("English 15",Instructordict["2"],"Also here","232","Winter","MWF","10am")
 add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2pm")
@@ -791,6 +769,9 @@ add_course("Chemistry 101",Instructordict["3"],"Not here","555","Fall","MTWF","2
 AddChild(college,"College of Enginering")
 AddChild(college,"College of Medicine")
 AddChild(college,"General Education")
+
+AddChild(college.returnchild("College of Enginering"),"Cmpsc")
+AddChild((college.returnchild(("College of Enginering"))).returnchild("Cmpsc"),Studentstack)
 printallchildvalues(college)
 
 #runtime loop
