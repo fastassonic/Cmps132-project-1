@@ -2,12 +2,13 @@ from Courses import Courses
 from Instructor import instructor 
 from student import student
 from queue import LifoQueue
+from collections import deque
 #Global declerations
 #TODO WHEN YOUR DONE, MAKE THIS FALSE. IT PRINTS DEBUG INFO
 debug = False
 Instructordict = {}
 Studentstack = LifoQueue()
-coursesdict = {}
+coursesdict = deque()
 Finished = False
 #Global methods
 def dict_selector(tempdict,customopt = None,allowback=False):
@@ -47,7 +48,23 @@ def stack_selector(tempstack,customopt = None,allowback=False):
         return temp
     else:
         return stack_selector(tempstack,customopt,allowback)
-    
+
+def course_selector(tempcourses,customopt = None,allowback=False):
+    if customopt == None:
+        customopt = []
+    idlist = []
+    for i in tempcourses:
+        print(f"{i.getClassID()}: {i.get_name()}")
+        idlist.append(str(i.getClassID()))
+    for i in customopt:
+        print(f"Other options: {i}")
+    if allowback:
+        print("Enter \"Back\" to return to the previous menu")
+    temp = input("please select one of the options: ")
+    if str(temp) in idlist or temp in customopt or (temp.lower() == "back" and allowback):
+        return str(temp)
+    else:
+        return course_selector(tempcourses,customopt,allowback)
 def add_instructor(name,email,contact,degree,courses=None,debug=False): 
     if courses == None:
         courses = list()
@@ -67,7 +84,13 @@ def add_student(name,email,contact,major,dob,courses = None):
         key = "1"
     Studentstack.put(student(key,name,email,contact,major,dob,courses))
     return key
+def returncourse(id):
+    returnobj = None
+    for i in coursesdict:
+        if str(i.getClassID()) == str(id):
+            returnobj = i
 
+    return returnobj
 def returnstudent(id):
     print(f"id is {id}")
     templist = []
@@ -121,12 +144,11 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
         print("Given undefined instructor command. Assuming you have yet to build the teacher for this class.")
         instructorid = ""
     if len(coursesdict) >= 1:
-        key = str(int(list(coursesdict.keys())[-1]) + 1 )
+        key=len(coursesdict)+1
     else:
-        key = "1"
-    coursesdict[key] = Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time)
-    if instructorid != "":
-        Instructordict[instructorid].AddCourse(coursesdict[key])
+        key=1
+    coursesdict.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+
 
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
@@ -138,7 +160,8 @@ def changer_instructor_for_class(course,instructor):
         returnstudent(i).returncourse(course.getClassID()).setInstructor(instructor.get_id())
     
 def del_course(courseid):
-    templist = []
+    coursesdict.remove(returncourse(str(courseid)))
+
     
 def add_student_to_course(course,student):
     print(course)
@@ -159,7 +182,7 @@ def printallinstructorsdetails():
         print(Instructordict[i].displayinstructorinfo(coursesdict))
 
 def printallcoursesdetails():
-    for i in coursesdict.keys():
+    for i in range(len(coursesdict)):
         print(coursesdict[i].displayinfo())
 
 def printallstudentdetails():
@@ -271,7 +294,7 @@ def studentclassmenu(editingid=""):
         if temp in ["1","2","3","4","5"]:
             if temp == "1":
                 print("Toggled one")
-                tempcourse = dict_selector(coursesdict)
+                tempcourse = course_selector(coursesdict)
                 print(f"Tempcourse is {tempcourse}")
                 add_student_to_course(tempcourse,returnstudent(editingid))
             if temp == "2":
@@ -492,7 +515,7 @@ def classesmenu():
                 add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name: "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
                 printallcoursesdetails()
         if temp == "2":
-            courseid = dict_selector(coursesdict,allowback=True)
+            courseid = course_selector(coursesdict,allowback=True)
             if courseid.lower() != "back":
                 del_course(courseid)
 
@@ -500,20 +523,20 @@ def classesmenu():
         if temp == "3":
             courseeditmenu()
         if temp == "4":
-            tempid = dict_selector(coursesdict,["all"],allowback=True)
+            tempid = course_selector(coursesdict,["all"],allowback=True)
             if tempid.lower() == "all":
                 printallcoursesdetails()
             elif tempid.lower() == "back":
                 return()
             else:
-                print(coursesdict[tempid].displayinfo())
+                print(coursesdict[(int)(tempid)-1].displayinfo())
         if temp=="5":
             mainmenu()
 
 def courseeditmenu(courseid=""):
     if courseid=="":
-        courseid = dict_selector(coursesdict)
-    if courseid.lower() != "back":
+        courseid = (int)(course_selector(coursesdict))
+    if courseid != "back":
         print(""" 
             Course editing submenu:
             1. Change name
@@ -528,8 +551,8 @@ def courseeditmenu(courseid=""):
         temp = input("Please select out of the possible option ")
         if temp in ["1","2","3","4","5","6","7","8"]:
             if temp == "1":
-                coursesdict[courseid].setClassName(input("Please enter new name: "))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setClassName(input("Please enter new name: "))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
@@ -539,7 +562,7 @@ def courseeditmenu(courseid=""):
                     courseeditmenu(courseid)
             if temp == "2":
                 instructorid = dict_selector(Instructordict)
-                changer_instructor_for_class(coursesdict[courseid],Instructordict[instructorid])
+                changer_instructor_for_class(returncourse(courseid),Instructordict[instructorid])
                 
                 print(""" 
                     Would you like to resume editing?
@@ -549,8 +572,8 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "3":
-                coursesdict[courseid].setLocation(input("Please enter new loccation: "))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setLocation(input("Please enter new loccation: "))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
@@ -559,8 +582,8 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "4":
-                coursesdict[courseid].setSemesterId(input("Please enter new semester Id"))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setSemesterID(input("Please enter new semester Id"))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
@@ -569,8 +592,8 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "5":
-                coursesdict[courseid].setSemesterId(input("Please enter new semester Id"))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setSemesterName(input("Please enter new semester name"))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
@@ -580,8 +603,8 @@ def courseeditmenu(courseid=""):
                     courseeditmenu(courseid)
                 
             if temp == "6":
-                coursesdict[courseid].setDate(input("Please enter new dates in mtwrf format"))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setDate(input("Please enter new dates in mtwrf format"))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
@@ -590,8 +613,8 @@ def courseeditmenu(courseid=""):
                 if input("") == "1":
                     courseeditmenu(courseid)
             if temp == "7":
-                coursesdict[courseid].setTime(input("Please enter new starttime"))
-                updateallstudentcourse(coursesdict[courseid])
+                returncourse(courseid).setTime(input("Please enter new starttime"))
+                updateallstudentcourse(returncourse(courseid))
                 print(""" 
                     Would you like to resume editing?
                     1. Yes
