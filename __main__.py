@@ -669,7 +669,11 @@ def classesmenu(queue=None):
             instructorid = queue_selector(tempqueue,["undefined"],True)
             if instructorid.lower() != "back":
                 instructor = returninstrucotr(tempqueue,instructorid)
-                add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),input("Semester name (either Spring or Fall): "),input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
+                sem=input("Semester name (either Spring or Fall): ")
+                while sem.lower() !="spring" and sem.lower() !="fall":
+                    print("Invalid Semester Name")
+                    sem = input("Semester name (either Spring or Fall): ")
+                add_course(input("Course name: "),instructor,input("Course Location: "),input("Semester id: "),sem,input("Dates (Please use the mtwrf format): "),input("Please include the time this class occurs"))
                 printallcoursesdetails()
         if temp == "2":
             courseid = course_selector(queue,allowback=True)
