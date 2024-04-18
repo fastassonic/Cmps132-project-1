@@ -64,5 +64,8 @@ class Courses:
         else:
             print("Student id not found? How is this happening")
     def displayinfo(self):
+        templist = []
         #id,name,instructor,location,semesterID,semesterName,studentList
-        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nDates: {self._dates}\nTime: {self._time}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent Id List: {self._studentList}"
+        for i in self._studentList:
+            templist.append(i.get_name())
+        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nDates: {self._dates}\nTime: {self._time}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent List: {templist}"
