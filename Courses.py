@@ -68,4 +68,4 @@ class Courses:
         #id,name,instructor,location,semesterID,semesterName,studentList
         for i in self._studentList:
             templist.append(i.get_name())
-        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor Id: {self._instructor}\nLocation: {self._location}\nDates: {self._dates}\nTime: {self._time}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent List: {templist}"
+        return f"Course\nId number: {self._id}\nname: {self._name}\nInstructor: {self._instructor.get_name()}\nLocation: {self._location}\nDates: {self._dates}\nTime: {self._time}\nSemester id: {self._semesterID}\nSemester Name: {self._semesterName}\nStudent List: {templist}"

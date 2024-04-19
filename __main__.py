@@ -48,10 +48,10 @@ def AddChild(node,name):
 def RemoveChild(node,name):
     allreadythere = False
     for i in node.children:
-        if i.value == name:
+        if i == name:
             allreadythere = True
     if allreadythere:
-        node.remove_child(college.returnchild(name))
+        node.remove_child(name)
     else:
         print("Department doesn't exist")
 
@@ -75,7 +75,7 @@ def treechildselector(node,customopt = None,allowback=False):
 
 def returnchild(node,id):
     #I Should implement a value check for this but I won't. if this errors out you've done something wrong.
-    return node.children[id]
+    return node.children[int(id)]
 
 
 def printallchildvalues(node):
@@ -162,6 +162,8 @@ def course_selector(tempcourses,customopt = None,allowback=False):
         print("Enter \"Back\" to return to the previous menu")
     temp = input("please select one of the options: ")
     if str(temp) in idlist or temp in customopt or (temp.lower() == "back" and allowback):
+        if temp.lower() == "back":
+            temp = temp.lower()
         return str(temp)
     else:
         return course_selector(tempcourses,customopt,allowback)
@@ -237,7 +239,7 @@ def returninstrucotr(queue,id):
         return None
 
 def remove_student(stack,id):
-    foundstudent = returnstudent(id)
+    foundstudent = returnstudent(stack,id)
     if foundstudent !=None:
         for i in foundstudent.returncourselist():
             coursesdict[i].removefromstudentlist(id)
@@ -267,30 +269,25 @@ def add_course(name,instructor,location,semesterID,semesterName,date,time,studen
     #Note, python is awkward. This is to prevent list sharing, hence why studentlist != [] initially
     if studentList == None: 
         studentList = []
-    if instructor != "undefined": 
-        try:
-            instructorid = str(instructor.get_id())
-        except:
-            print("This doesn't seem to be an instructor object")
-            return()
-    else: 
+    if instructor == "undefined":
         print("Given undefined instructor command. Assuming you have yet to build the teacher for this class.")
         instructorid = ""
     if len(coursesdict) >= 1:
         key=str(int(coursesdict[-1].getClassID())+1)
     else:
         key=str(1)
-    coursesdict.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+    coursesdict.append(Courses(key,name,instructor,location,semesterID,semesterName,studentList,date,time))
     if(semesterName.lower()=="fall"):
-        fallcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+        fallcourses.append(Courses(key,name,instructor,location,semesterID,semesterName,studentList,date,time))
     elif(semesterName.lower()=="spring"):
-        springcourses.append(Courses(key,name,instructorid,location,semesterID,semesterName,studentList,date,time))
+        springcourses.append(Courses(key,name,instructor,location,semesterID,semesterName,studentList,date,time))
     else:
         print("Invalid Semester Name")
 
 def changer_instructor_for_class(course,instructor):
     #pass in the objects. theres logic to manage the rest
     #TODO talk to max about how to implement this
+    print(course.getInstructor())
     course.getInstructor().DropCourse(course)
     instructor.AddCourse(course)
     course.setInstructor(instructor)
@@ -453,21 +450,27 @@ def studentclassmenu(stack,editingid=""):
                 print(f"Tempcourse is {tempcourse}")
                 add_student_to_course(tempcourse,returnstudent(stack,editingid))
             if temp == "2":
-                tempcourse = coursesdict[dict_selector(returnstudent(stack,editingid).returncourselist())]
+                tempcourse = returncourse(course_selector(coursesdict))
                 del_student_from_course(tempcourse,returnstudent(stack,editingid))
             if temp == "3":
-                for i in returnstudent(stack,editingid).returncourselist():
-                    i.displayinfo()
+                for i in returnstudent(stack,editingid).returncourselist().values():
+                    print(i.displayinfo())
             if temp == "4":
-                coursesid = dict_selector(returnstudent(stack,editingid).returncourselist(),allowback=True)
-                if coursesid.lower() != "back":
+                coursesid = returncourse(course_selector(coursesdict,allowback=True))
+                if coursesid != "back":
                     tempgrade = ""
-                    while not tempgrade.isnumeric():
+                    tempgrade2=""
+                    tempgrade3=""
+                    while not tempgrade.isnumeric() and not tempgrade2.isnumeric() and not tempgrade3.isnumeric():
                         try:
-                            tempgrade = [input("Enter in the new quiz 1 grade"),input("Enter in the new quiz 2 grade"),input("Enter in the new quiz 3 grade")]
+                            tempgrade = input("Enter in the new quiz 1 grade")
+                            tempgrade2= input("Enter in the new quiz 2 grade")
+                            tempgrade3=input("Enter in the new quiz 3 grade")
+                            grade=[tempgrade,tempgrade2,tempgrade3]
                         except:
                             tempgrade = ""
-                    returnstudent(stack,editingid).gradechange(coursesid,int(tempgrade))
+
+                    returnstudent(stack,editingid).gradechange(coursesid,grade)
             if temp == "5":
                 studentmenu(stack)
     else:
@@ -538,7 +541,7 @@ def studenteditmenu(stack,editingid=""):
                     studenteditmenu(stack,editingid)
                 
             if temp == "6":
-                studentmenu()
+                studentmenu(stack)
         else:
             studenteditmenu(stack,editingid)
 def instructorsmenu(queue = None):
@@ -558,7 +561,6 @@ def instructorsmenu(queue = None):
             print("Adding Instructor")
             
             tempid = add_instructor(queue,input("Instructor's name?: "), input("Instructor's Email?: "), input("Instructor's contact?: "),input("Instructor's degree?: "))
-            print(tempid)
             print(""" 
                 Would you like to resume?
                 1. Yes
@@ -862,6 +864,7 @@ add_instructor(Fallinstructor,"Jane doe","Jane@john.com","123-498-1087","Physics
 add_instructor(Fallinstructor,"John doe","John@john.com","123-498-1087","English",[],True)
 add_instructor(Fallinstructor,"Walter White","walterwhite@gmail.com","322-343-3422","Chemistry",[],True)
 add_instructor(Fallinstructor,"Haifa","Haifa@gmail.com","322-343-3422","Cmpsc",[],True)
+add_instructor(Springinstructor,"Joe","Joe@gmail.com","987-654-3212","Joe Studies",[],True)
 add_student(Studentstack,"Janie bill","Janie@janie.com","123-456-7890","Cmpsc","12/19/1")
 add_student(Studentstack,"Jesse Pinkman","jessepinkman@gmail.com","555-555-5555","Cmpsc","09/24/84")
 add_student(Studentstack,"Student McStudentface","student@student.com","1","Cmpsc","02/02/02")
